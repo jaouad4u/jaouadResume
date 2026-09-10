@@ -1,470 +1,685 @@
-# Here's your updated resume HTML with all the information from your PDF:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Resume of Jaouad El Ghouzi - Cybersecurity Engineer" />
-<title>Jaouad El Ghouzi | Cybersecurity Resume</title>
-<style>
-    /* --- CSS Variables & Design System --- */
-    :root {
-        --bg-color: #f6f8fb;
-        --card-bg: #ffffff;
-        --text-main: #1e293b;
-        --text-muted: #64748b;
-        --accent-primary: #6366f1; /* Indigo */
-        --accent-secondary: #06b6d4; /* Cyan */
-        --accent-tertiary: #f43f5e; /* Rose */
-        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --transition: background-color 0.3s ease, color 0.3s ease;
-    }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jaouad El Ghouzi - Cybersecurity Engineer Resume">
+    <title>Jaouad El Ghouzi | Cybersecurity Resume</title>
 
-    /* Dark Mode Variables */
-    [data-theme="dark"] {
-        --bg-color: #0f172a;
-        --card-bg: #1e293b;
-        --text-main: #f1f5f9;
-        --text-muted: #94a3b8;
-        --accent-primary: #818cf8;
-        --accent-secondary: #22d3ee;
-        --accent-tertiary: #fb7185;
-        --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-    }
-
-    /* --- Global Resets --- */
-    * { box-sizing: border-box; }
-    body {
-        margin: 0;
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        background-color: var(--bg-color);
-        color: var(--text-main);
-        transition: var(--transition);
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-        padding-bottom: 3rem;
-    }
-
-    /* --- Layout --- */
-    .container {
-        max-width: 1100px;
-        margin: 2rem auto;
-        padding: 0 1.5rem;
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 2rem;
-    }
-
-    /* --- Components --- */
-    .card {
-        background-color: var(--card-bg);
-        border-radius: 12px;
-        box-shadow: var(--shadow);
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        transition: transform 0.2s ease, var(--transition);
-        overflow: hidden;
-    }
-
-    .card:hover { transform: translateY(-3px); }
-
-    /* Typography */
-    h1, h2, h3, h4 { margin-top: 0; font-weight: 700; color: var(--text-main); }
-    h1 { font-size: 1.8rem; line-height: 1.2; margin-bottom: 0.2rem; }
-    h2 { font-size: 1.25rem; color: var(--text-main); }
-    h3 { font-size: 1.05rem; margin-bottom: 0.2rem; font-weight: 700; }
-    
-    .role-subtitle { 
-        color: var(--accent-primary); 
-        font-weight: 600; 
-        font-size: 0.95rem; 
-        letter-spacing: 0.5px;
-        margin-bottom: 0.3rem;
-    }
-
-    .section-heading {
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        color: var(--accent-tertiary);
-        margin-bottom: 1rem;
-        border-bottom: 2px solid var(--bg-color);
-        padding-bottom: 0.5rem;
-        font-weight: 800;
-    }
-
-    p, li { font-size: 0.95rem; color: var(--text-muted); margin: 0.5rem 0; }
-
-    /* Header Bar */
-    header.top-bar {
-        grid-column: 1 / -1;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 1rem;
-        margin-bottom: 1rem;
-    }
-
-    /* Button */
-    button.theme-toggle {
-        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-        border: none;
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    }
-    button.theme-toggle:hover { opacity: 0.9; }
-
-    /* --- Sidebar Specifics --- */
-    .profile-card { text-align: center; }
-    
-    .profile-card .title-subtitle {
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--accent-secondary);
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-    }
-
-    .profile-card .clearance-badge {
-        font-size: 0.8rem;
-        color: var(--accent-primary);
-        font-weight: 600;
-        margin-top: 0.5rem;
-    }
-
-    /* Contact Info Section */
-    .contact-info { margin-top: 1.5rem; text-align: left; }
-    .contact-item { margin-bottom: 1rem; display: flex; flex-direction: column; }
-    .contact-label { font-size: 0.75rem; text-transform: uppercase; color: var(--accent-primary); font-weight: bold;}
-    .contact-value { color: var(--text-main); font-weight: 500; font-size: 0.9rem; word-break: break-all;}
-
-    ul.clean-list { list-style: none; padding: 0; margin: 0; }
-    ul.clean-list li {
-        margin-bottom: 0.6rem;
-        padding-left: 0.8rem;
-        border-left: 3px solid var(--accent-secondary);
-        color: var(--text-main);
-        font-size: 0.9rem;
-    }
-
-    /* --- Main Content Specifics --- */
-    .job-block { margin-bottom: 2rem; position: relative; }
-    .job-block:last-child { margin-bottom: 0; }
-    
-    .company-location {
-        font-weight: 600;
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        margin-bottom: 0.3rem;
-    }
-
-    .date-badge {
-        font-size: 0.85rem;
-        color: var(--text-muted);
-        background: var(--bg-color);
-        padding: 0.2rem 0.5rem;
-        border-radius: 4px;
-        display: inline-block;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-    }
-
-    ul.bullet-list { padding-left: 1.2rem; margin-top: 0.5rem; margin-bottom: 0; }
-    ul.bullet-list li { margin-bottom: 0.5rem; list-style-type: disc; }
-
-    .skills-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        font-size: 0.9rem;
-    }
-
-    .skill-category { margin-bottom: 1rem; }
-    .skill-category strong { color: var(--text-main); display: block; margin-bottom: 0.3rem; }
-
-    /* --- Print & Responsive Styles --- */
-    @media screen and (max-width: 768px) {
-        .container { grid-template-columns: 1fr; }
-        .top-bar h1 { font-size: 1.4rem; }
-        .skills-grid { grid-template-columns: 1fr; }
-    }
-    
-    @media print {
-        button.theme-toggle { display: none; }
-        body { background: white; color: black; }
-        .card { box-shadow: none; border: 1px solid #ddd; margin-bottom: 1rem; page-break-inside: avoid; }
-        .container { display: block; width: 100%; margin: 0; padding: 0; }
-        aside { display: block; width: 100%; margin-bottom: 1rem; border-bottom: 2px solid #333; padding-bottom: 1rem; }
-        main { display: block; width: 100%; }
-        [data-theme="dark"] {
-            --text-main: #000;
-            --text-muted: #333;
-            --bg-color: #fff;
-            --card-bg: #fff;
+    <style>
+        :root {
+            --bg-color: #f6f8fb;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent-primary: #4f46e5;
+            --accent-secondary: #0891b2;
+            --accent-tertiary: #e11d48;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 14px rgba(15, 23, 42, 0.10);
         }
-        .section-heading { color: #000; border-bottom-color: #000; }
-        a { text-decoration: none; color: #000; }
-    }
-</style>
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --accent-primary: #818cf8;
+            --accent-secondary: #22d3ee;
+            --accent-tertiary: #fb7185;
+            --border-color: #334155;
+            --shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0 0 3rem;
+            background: var(--bg-color);
+            color: var(--text-main);
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.55;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            gap: 1.75rem;
+        }
+
+        .top-bar {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .site-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .theme-toggle {
+            border: none;
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.18);
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.9;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.4rem;
+            margin-bottom: 1.35rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, background-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin-top: 0;
+        }
+
+        h1 {
+            margin-bottom: 0.35rem;
+            color: var(--text-main);
+            font-size: 1.75rem;
+            line-height: 1.2;
+        }
+
+        h3 {
+            margin-bottom: 0.25rem;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            line-height: 1.35;
+        }
+
+        p,
+        li {
+            color: var(--text-muted);
+            font-size: 0.93rem;
+        }
+
+        .section-heading {
+            margin-bottom: 1rem;
+            padding-bottom: 0.55rem;
+            color: var(--accent-tertiary);
+            border-bottom: 2px solid var(--border-color);
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+        .profile-card {
+            text-align: center;
+        }
+
+        .role-title {
+            margin: 0.5rem 0 0;
+            color: var(--accent-primary);
+            font-size: 0.86rem;
+            font-weight: 800;
+            letter-spacing: 0.7px;
+            line-height: 1.5;
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            margin: 1rem 0 0;
+            padding: 0.6rem;
+            color: var(--accent-primary);
+            background: var(--bg-color);
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .contact-info {
+            margin-top: 1.3rem;
+            text-align: left;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0.9rem;
+        }
+
+        .contact-label {
+            color: var(--accent-primary);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .contact-value {
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .contact-value a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .clean-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .clean-list li {
+            margin-bottom: 0.65rem;
+            padding-left: 0.75rem;
+            color: var(--text-main);
+            border-left: 3px solid var(--accent-secondary);
+            font-size: 0.88rem;
+        }
+
+        .job-block {
+            margin-bottom: 2rem;
+        }
+
+        .job-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .company-location {
+            margin-bottom: 0.25rem;
+            color: var(--accent-primary);
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .date-badge {
+            display: inline-block;
+            margin-bottom: 0.55rem;
+            padding: 0.2rem 0.55rem;
+            color: var(--text-muted);
+            background: var(--bg-color);
+            border-radius: 5px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .bullet-list {
+            margin: 0.45rem 0 0;
+            padding-left: 1.2rem;
+        }
+
+        .bullet-list li {
+            margin-bottom: 0.48rem;
+        }
+
+        .competency-block {
+            margin-bottom: 1rem;
+        }
+
+        .competency-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .competency-title {
+            display: block;
+            margin-bottom: 0.2rem;
+            color: var(--text-main);
+            font-size: 0.92rem;
+            font-weight: 800;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.2rem;
+        }
+
+        .skill-category {
+            padding: 1rem;
+            background: var(--bg-color);
+            border-radius: 9px;
+        }
+
+        .skill-category strong {
+            display: block;
+            margin-bottom: 0.35rem;
+            color: var(--accent-primary);
+            font-size: 0.9rem;
+        }
+
+        .language-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.3rem 0.55rem;
+            color: var(--text-main);
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        @media screen and (max-width: 800px) {
+            .container {
+                grid-template-columns: 1fr;
+                margin-top: 1rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            @page {
+                margin: 0.45in;
+            }
+
+            body {
+                padding: 0;
+                color: #000000;
+                background: #ffffff;
+            }
+
+            .container {
+                display: block;
+                max-width: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .top-bar,
+            .theme-toggle {
+                display: none;
+            }
+
+            .card {
+                margin-bottom: 0.75rem;
+                padding: 0.85rem;
+                border: 1px solid #cccccc;
+                border-radius: 0;
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .card:hover {
+                transform: none;
+            }
+
+            h1,
+            h3,
+            .contact-value,
+            .competency-title,
+            .clean-list li {
+                color: #000000;
+            }
+
+            p,
+            li,
+            .date-badge {
+                color: #333333;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .skill-category,
+            .status-badge,
+            .date-badge,
+            .tag {
+                background: #f5f5f5;
+            }
+        }
+    </style>
 </head>
+
 <body>
+    <div class="container">
 
-<div class="container">
+        <header class="top-bar">
+            <div class="site-label">Cybersecurity Resume</div>
 
-    <!-- Top Navigation Header -->
-    <header class="top-bar">
-        <div></div>
-        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Switch Theme">
-            ☀ / ☾ Mode
-        </button>
-    </header>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Switch between light and dark mode">
+                ☀ / ☾ Mode
+            </button>
+        </header>
 
-    <!-- Sidebar / Aside -->
-    <aside>
-        <!-- Identity Card -->
-        <div class="card profile-card">
-            <h1>Jaouad El Ghouzi</h1>
-            <div class="title-subtitle">Cybersecurity Engineer<br>Penetration Tester<br>Systems Administrator</div>
-            <div class="clearance-badge">🔐 Active Tier 4 Government Background Investigation</div>
+        <aside>
+            <section class="card profile-card">
+                <h1>Jaouad El Ghouzi</h1>
 
-            <div class="contact-info">
-                <div class="contact-item">
-                    <span class="contact-label">Location</span>
-                    <span class="contact-value">Brambleton, VA 20148</span>
+                <div class="role-title">
+                    Cybersecurity Engineer<br>
+                    Penetration Tester<br>
+                    Systems Administrator
                 </div>
-                <div class="contact-item">
-                    <span class="contact-label">Phone</span>
-                    <span class="contact-value"><a href="tel:5712459013" style="color:inherit;text-decoration:none;">571-245-9013</a></span>
+
+                <div class="status-badge">
+                    U.S. Citizen<br>
+                    Active Tier 4 Government Background Investigation
                 </div>
-                <div class="contact-item">
-                    <span class="contact-label">Email</span>
-                    <span class="contact-value"><a href="mailto:Jaouad@usa.com" style="color:inherit;text-decoration:none;">Jaouad@usa.com</a></span>
+
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span class="contact-label">Location</span>
+                        <span class="contact-value">Brambleton, VA 20148</span>
+                    </div>
+
+                    <div class="contact-item">
+                        <span class="contact-label">Phone</span>
+                        <span class="contact-value">
+                            <a href="tel:+15712459013">571-245-9013</a>
+                        </span>
+                    </div>
+
+                    <div class="contact-item">
+                        <span class="contact-label">Email</span>
+                        <span class="contact-value">
+                            <a href="mailto:Jaouad@usa.com">Jaouad@usa.com</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="contact-item">
-                    <span class="contact-label">Status</span>
-                    <span class="contact-value">U.S. Citizen</span>
-                </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- Core Technical Competencies Card -->
-        <div class="card">
-            <div class="section-heading">Core Competencies</div>
-            <ul class="clean-list">
-                <li>Incident Response & Threat Hunting</li>
-                <li>Vulnerability Management (Nessus)</li>
-                <li>Digital Forensics (Autopsy, FTK)</li>
-                <li>Penetration Testing</li>
-                <li>Active Directory Security</li>
-                <li>Microsoft 365 & Entra ID</li>
-                <li>Cloud Security (Azure, AWS)</li>
-                <li>EDR & Email Security</li>
-                <li>NIST & DISA STIG Hardening</li>
-            </ul>
-        </div>
+            <section class="card">
+                <div class="section-heading">Core Competencies</div>
 
-        <!-- Security Tools Card -->
-        <div class="card">
-            <div class="section-heading">Security Tools</div>
-            <ul class="clean-list">
-                <li>Microsoft Defender, Splunk, Wazuh</li>
-                <li>Burp Suite, Metasploit</li>
-                <li>Cobalt Strike, Sliver, Mythic</li>
-                <li>Autopsy, FTK, Wireshark</li>
-                <li>Nessus Vulnerability Scanner</li>
-            </ul>
-        </div>
-
-        <!-- Certifications Card -->
-        <div class="card">
-            <div class="section-heading">Certifications</div>
-            <ul class="clean-list">
-                <li>CISM</li>
-                <li>Certified Ethical Hacker (CEH)</li>
-                <li>CompTIA SecurityX</li>
-                <li>CompTIA PenTest+</li>
-                <li>CompTIA CySA+</li>
-                <li>CompTIA Security+</li>
-                <li>AWS Solutions Architect</li>
-                <li>Azure Administrator Associate</li>
-                <li>LPIC-1</li>
-                <li>CompTIA Network+</li>
-                <li>CompTIA A+</li>
-                <li>ITIL 4</li>
-            </ul>
-        </div>
-
-        <!-- Education Card -->
-        <div class="card">
-            <div class="section-heading">Education</div>
-            <div>
-                <strong style="color: var(--text-main); display: block; margin-bottom: 0.3rem;">M.S. Cybersecurity</strong>
-                <span style="color: var(--text-muted); font-size: 0.9rem;">Western Governors University (In Progress)</span>
-            </div>
-            <div style="margin-top: 0.8rem;">
-                <strong style="color: var(--text-main); display: block; margin-bottom: 0.3rem;">B.S. Cybersecurity</strong>
-                <span style="color: var(--text-muted); font-size: 0.9rem;">Western Governors University</span>
-            </div>
-        </div>
-
-        <!-- Languages Card -->
-        <div class="card">
-            <div class="section-heading">Languages</div>
-            <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
-                <span class="date-badge">English</span>
-                <span class="date-badge">Arabic</span>
-                <span class="date-badge">French</span>
-                <span class="date-badge">Spanish</span>
-                <span class="date-badge">Turkish</span>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main>
-        <!-- Summary -->
-        <section class="card">
-            <div class="section-heading">Professional Summary</div>
-            <p>
-                Cybersecurity Engineer and Systems Administrator with 9+ years of progressive IT experience spanning security operations, incident response, digital forensics, vulnerability management, penetration testing, Microsoft 365 administration, cloud infrastructure, and enterprise systems support. Experienced supporting commercial and government environments, including EPA-related systems and state/local government infrastructure. Hands-on experience investigating phishing, suspicious executables, remote-access activity, endpoint indicators, and email security incidents. Skilled with Microsoft Defender, Nessus, Splunk, Wazuh, Autopsy, FTK, Burp Suite, Metasploit, Cobalt Strike, Sliver, and Mythic, with strong knowledge of Active Directory, Group Policy, Azure, AWS, NIST controls, and DISA STIG-aligned hardening.
-            </p>
-        </section>
-
-        <!-- Experience -->
-        <section class="card">
-            <div class="section-heading">Professional Experience</div>
-
-            <article class="job-block">
-                <h3>Cybersecurity Engineer / Systems Administrator</h3>
-                <div class="company-location">Global Science & Technology (GST/GTSC) — Chantilly, VA</div>
-                <div class="date-badge">February 2025 – Present</div>
-                <ul class="bullet-list">
-                    <li>Perform security monitoring, incident investigation, vulnerability analysis, endpoint security reviews, and remediation across enterprise and government environments.</li>
-                    <li>Investigate phishing, suspicious email activity, malicious executables, ScreenConnect/remote-access activity, and potentially compromised endpoints; analyze IOCs, endpoint telemetry, user activity, persistence, and network indicators.</li>
-                    <li>Support incident response from alert triage through investigation, containment recommendations, remediation, and technical documentation.</li>
-                    <li>Conduct vulnerability assessments and remediation using Nessus; prioritize findings based on severity, exposure, affected systems, and operational risk.</li>
-                    <li>Harden Windows systems using Active Directory Group Policy and security configurations aligned with NIST and DISA STIG guidance.</li>
-                    <li>Conduct forensic investigations using Autopsy and FTK to analyze disk images, browser artifacts, Outlook cache data, Windows Prefetch, file-system metadata, persistence mechanisms, and system timelines.</li>
-                    <li>Generate and document SHA-256 hashes, correlate forensic evidence across endpoint and email activity, and produce structured incident-response findings.</li>
-                    <li>Administer Active Directory accounts, groups, permissions, security policies, onboarding/offboarding, identity access, and enterprise permissions.</li>
-                    <li>Support Microsoft 365, Entra ID, Microsoft Defender, Windows endpoints, authentication, endpoint configuration, and enterprise collaboration services.</li>
-                    <li>Support EPA-related federal environments involving system monitoring, cybersecurity operations, compliance activities, and infrastructure administration.</li>
-                    <li>Deploy and maintain infrastructure supporting West Virginia county government organizations and document security, system, and remediation activities.</li>
+                <ul class="clean-list">
+                    <li>Incident Response &amp; Threat Hunting</li>
+                    <li>IOC Analysis &amp; Security Monitoring</li>
+                    <li>Phishing &amp; Email Security Investigation</li>
+                    <li>Vulnerability Management</li>
+                    <li>Network &amp; Web Penetration Testing</li>
+                    <li>Active Directory Assessments</li>
+                    <li>Digital Forensics &amp; Timeline Analysis</li>
+                    <li>Microsoft 365 &amp; Entra ID</li>
+                    <li>NIST &amp; DISA STIG Hardening</li>
+                    <li>Azure &amp; AWS Cloud Infrastructure</li>
                 </ul>
-            </article>
+            </section>
 
-            <article class="job-block">
-                <h3>Systems Administrator</h3>
-                <div class="company-location">Nova Marketing Inc — Manassas, VA</div>
-                <div class="date-badge">April 2020 – December 2024</div>
-                <ul class="bullet-list">
-                    <li>Administered and supported Windows workstations, servers, network devices, applications, and business technology infrastructure.</li>
-                    <li>Provided remote and onsite support; installed, configured, upgraded, maintained, and troubleshot desktops, servers, peripherals, and network equipment.</li>
-                    <li>Designed and implemented SMB network solutions including IP addressing, switching, routing, wireless connectivity, and related infrastructure.</li>
-                    <li>Managed user accounts, permissions, workstation configurations, backup systems, recovery operations, patching, software deployment, and system maintenance.</li>
-                    <li>Resolved escalated hardware, software, authentication, connectivity, and network issues while minimizing business disruption and maintaining technical documentation.</li>
+            <section class="card">
+                <div class="section-heading">Professional Certifications</div>
+
+                <ul class="clean-list">
+                    <li>CISM</li>
+                    <li>Certified Ethical Hacker (CEH)</li>
+                    <li>CompTIA SecurityX</li>
+                    <li>CompTIA PenTest+</li>
+                    <li>CompTIA CySA+</li>
+                    <li>CompTIA Security+</li>
+                    <li>AWS Solutions Architect – Associate</li>
+                    <li>Azure Administrator Associate</li>
+                    <li>LPIC-1</li>
+                    <li>CompTIA Network+</li>
+                    <li>CompTIA A+</li>
+                    <li>CompTIA Data+</li>
+                    <li>ITIL 4 – IT Service Management</li>
                 </ul>
-            </article>
+            </section>
 
-            <article class="job-block">
-                <h3>Computer & Networking System Technician</h3>
-                <div class="company-location">Yakshna Solutions, Inc. (YSI) — Herndon, VA</div>
-                <div class="date-badge">July 2017 – March 2020</div>
-                <ul class="bullet-list">
-                    <li>Monitored and troubleshot computer systems, network infrastructure, applications, hardware, and security-related issues.</li>
-                    <li>Managed organizational backup and restore operations and participated in investigations involving security incidents and suspicious system behavior.</li>
-                    <li>Performed manual and automated testing of electronic filing applications and recommended corrective actions for technical findings.</li>
-                    <li>Managed network systems, workstation configurations, access-control technologies, onboarding/offboarding, user permissions, and technology inventory.</li>
-                    <li>Provided remote and onsite technical support and documented incidents, resolutions, and configuration changes.</li>
+            <section class="card">
+                <div class="section-heading">Education</div>
+
+                <div class="competency-block">
+                    <span class="competency-title">
+                        Master of Science, Cybersecurity and Information Assurance
+                    </span>
+                    <p>Western Governors University (WGU)</p>
+                </div>
+
+                <div class="competency-block">
+                    <span class="competency-title">
+                        Bachelor of Science, Cybersecurity and Information Assurance
+                    </span>
+                    <p>Western Governors University (WGU)</p>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="section-heading">Languages</div>
+
+                <div class="language-tags">
+                    <span class="tag">English</span>
+                    <span class="tag">Arabic</span>
+                    <span class="tag">French</span>
+                    <span class="tag">Spanish</span>
+                    <span class="tag">Turkish</span>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="section-heading">Additional Information</div>
+
+                <ul class="clean-list">
+                    <li>U.S. Citizen</li>
+                    <li>Active Tier 4 Government Background Investigation</li>
+                    <li>Valid Driver's License</li>
+                    <li>Government &amp; Commercial Environment Experience</li>
                 </ul>
-            </article>
+            </section>
+        </aside>
 
-            <article class="job-block">
-                <h3>Cable Technician</h3>
-                <div class="company-location">WCC-Cable — COX Communications Contractor — Herndon, VA</div>
-                <div class="date-badge">December 2015 – June 2017</div>
-                <ul class="bullet-list">
-                    <li>Installed and repaired telecommunications services for residential and commercial customers, including coaxial cable, Cat5 Ethernet, RJ45, RJ11, modems, routers, and related equipment.</li>
-                    <li>Diagnosed signal, connectivity, cabling, and equipment issues; tested and calibrated devices to ensure reliable service.</li>
-                    <li>Maintained tools and inventory, assisted junior technicians, educated customers, and documented installations and repairs.</li>
-                </ul>
-            </article>
+        <main>
+            <section class="card">
+                <div class="section-heading">Professional Summary</div>
 
-        </section>
+                <p>
+                    Cybersecurity Engineer and Systems Administrator with 9+ years of progressive IT experience spanning security operations, incident response, digital forensics, vulnerability management, penetration testing, Microsoft 365 administration, cloud infrastructure, and enterprise systems support. Experienced supporting commercial and government environments, including EPA-related systems and state/local government infrastructure. Hands-on experience investigating phishing, suspicious executables, remote-access activity, endpoint indicators, and email security incidents. Skilled with Microsoft Defender, Nessus, Splunk, Wazuh, Autopsy, FTK, Burp Suite, Metasploit, Cobalt Strike, Sliver, and Mythic, with strong knowledge of Active Directory, Group Policy, Azure, AWS, NIST controls, and DISA STIG-aligned hardening.
+                </p>
+            </section>
 
-        <!-- Technical Skills Section -->
-        <section class="card">
-            <div class="section-heading">Technical Skills</div>
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <strong>Security</strong>
-                    <span style="color: var(--text-muted); font-size: 0.9rem;">Microsoft Defender, Nessus, Splunk, Wazuh, vulnerability management, threat hunting, IOC analysis, incident response, endpoint security, phishing investigation, security hardening</span>
+            <section class="card">
+                <div class="section-heading">Core Technical Competencies</div>
+
+                <div class="competency-block">
+                    <span class="competency-title">Security Operations</span>
+                    <p>
+                        Incident Response, Threat Hunting, IOC Analysis, EDR, Email Security, Phishing Investigation, Vulnerability Management, Security Monitoring, NIST, DISA STIG
+                    </p>
                 </div>
-                <div class="skill-category">
-                    <strong>Offensive Security</strong>
-                    <span style="color: var(--text-muted); font-size: 0.9rem;">Burp Suite, Metasploit, Cobalt Strike, Sliver, Mythic, penetration testing, Active Directory security assessments, vulnerability exploitation, adversary simulation</span>
+
+                <div class="competency-block">
+                    <span class="competency-title">Offensive Security</span>
+                    <p>
+                        Network &amp; Web Penetration Testing, Active Directory Assessments, Vulnerability Exploitation, Adversary Simulation, Red Team Operations, Privilege Escalation
+                    </p>
                 </div>
-                <div class="skill-category">
-                    <strong>Forensics</strong>
-                    <span style="color: var(--text-muted); font-size: 0.9rem;">Autopsy, FTK, disk-image analysis, Windows/browser/Outlook artifacts, Prefetch analysis, persistence analysis, timeline reconstruction, SHA-256 hashing</span>
+
+                <div class="competency-block">
+                    <span class="competency-title">Digital Forensics</span>
+                    <p>
+                        Autopsy, FTK, Disk Images, Browser/Outlook Artifacts, Windows Prefetch, Persistence Analysis, SHA-256 Hashing, Timeline Reconstruction
+                    </p>
                 </div>
-                <div class="skill-category">
-                    <strong>Platforms</strong>
-                    <span style="color: var(--text-muted); font-size: 0.9rem;">Microsoft 365, Entra ID, Active Directory, Group Policy, Windows Server, Windows 10/11, Linux, macOS, Azure, AWS</span>
+
+                <div class="competency-block">
+                    <span class="competency-title">Microsoft / Cloud</span>
+                    <p>
+                        Microsoft 365, Entra ID, Active Directory, Group Policy, Microsoft Defender, Windows Server, Azure, AWS
+                    </p>
                 </div>
-                <div class="skill-category">
-                    <strong>Networking</strong>
-                    <span style="color: var(--text-muted); font-size: 0.9rem;">TCP/IP, DNS, DHCP, VPN, Ethernet, switching, routing, Wi-Fi, network troubleshooting, backup and recovery</span>
+
+                <div class="competency-block">
+                    <span class="competency-title">Security Tools</span>
+                    <p>
+                        Nessus, Splunk, Wazuh, Wireshark, Burp Suite, Metasploit, Cobalt Strike, Sliver, Mythic
+                    </p>
                 </div>
-            </div>
-        </section>
+            </section>
 
-    </main>
+            <section class="card">
+                <div class="section-heading">Professional Experience</div>
 
-</div>
+                <article class="job-block">
+                    <h3>Cybersecurity Engineer / Systems Administrator</h3>
+                    <div class="company-location">
+                        Global Science &amp; Technology (GST/GTSC) — Chantilly, VA
+                    </div>
+                    <div class="date-badge">February 2025 – Present</div>
 
-<script>
-    // Javascript for Theme Toggle Logic
-    const htmlEl = document.documentElement;
+                    <ul class="bullet-list">
+                        <li>Perform security monitoring, incident investigation, vulnerability analysis, endpoint security reviews, and remediation across enterprise and government environments.</li>
+                        <li>Investigate phishing, suspicious email activity, malicious executables, ScreenConnect/remote-access activity, and potentially compromised endpoints; analyze IOCs, endpoint telemetry, user activity, persistence, and network indicators.</li>
+                        <li>Support incident response from alert triage through investigation, containment recommendations, remediation, and technical documentation.</li>
+                        <li>Conduct vulnerability assessments and remediation using Nessus; prioritize findings based on severity, exposure, affected systems, and operational risk.</li>
+                        <li>Harden Windows systems using Active Directory Group Policy and security configurations aligned with NIST and DISA STIG guidance.</li>
+                        <li>Conduct forensic investigations using Autopsy and FTK to analyze disk images, browser artifacts, Outlook cache data, Windows Prefetch, file-system metadata, persistence mechanisms, and system timelines.</li>
+                        <li>Generate and document SHA-256 hashes, correlate forensic evidence across endpoint and email activity, and produce structured incident-response findings.</li>
+                        <li>Administer Active Directory accounts, groups, permissions, security policies, onboarding/offboarding, identity access, and enterprise permissions.</li>
+                        <li>Support Microsoft 365, Entra ID, Microsoft Defender, Windows endpoints, authentication, endpoint configuration, and enterprise collaboration services.</li>
+                        <li>Support EPA-related federal environments involving system monitoring, cybersecurity operations, compliance activities, and infrastructure administration.</li>
+                        <li>Deploy and maintain infrastructure supporting West Virginia county government organizations and document security, system, and remediation activities.</li>
+                    </ul>
+                </article>
 
-    function toggleTheme() {
-        const currentTheme = htmlEl.getAttribute("data-theme") || "light";
-        const newTheme = currentTheme === "light" ? "dark" : "light";
-        
-        htmlEl.setAttribute("data-theme", newTheme);
-        localStorage.setItem("resume_theme", newTheme);
-    }
+                <article class="job-block">
+                    <h3>Systems Administrator</h3>
+                    <div class="company-location">
+                        Nova Marketing Inc — Manassas, VA
+                    </div>
+                    <div class="date-badge">April 2020 – December 2024</div>
 
-    // Initialize Theme from saved preference
-    const savedTheme = localStorage.getItem("resume_theme");
-    if (savedTheme) {
-        htmlEl.setAttribute("data-theme", savedTheme);
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        htmlEl.setAttribute("data-theme", "dark");
-    }
-</script>
+                    <ul class="bullet-list">
+                        <li>Administered and supported Windows workstations, servers, network devices, applications, and business technology infrastructure.</li>
+                        <li>Provided remote and onsite support; installed, configured, upgraded, maintained, and troubleshot desktops, servers, peripherals, and network equipment.</li>
+                        <li>Designed and implemented SMB network solutions including IP addressing, switching, routing, wireless connectivity, and related infrastructure.</li>
+                        <li>Managed user accounts, permissions, workstation configurations, backup systems, recovery operations, patching, software deployment, and system maintenance.</li>
+                        <li>Resolved escalated hardware, software, authentication, connectivity, and network issues while minimizing business disruption and maintaining technical documentation.</li>
+                    </ul>
+                </article>
 
+                <article class="job-block">
+                    <h3>Computer &amp; Networking System Technician</h3>
+                    <div class="company-location">
+                        Yakshna Solutions, Inc. (YSI) — Herndon, VA
+                    </div>
+                    <div class="date-badge">July 2017 – March 2020</div>
+
+                    <ul class="bullet-list">
+                        <li>Monitored and troubleshot computer systems, network infrastructure, applications, hardware, and security-related issues.</li>
+                        <li>Managed organizational backup and restore operations and participated in investigations involving security incidents and suspicious system behavior.</li>
+                        <li>Performed manual and automated testing of electronic filing applications and recommended corrective actions for technical findings.</li>
+                        <li>Managed network systems, workstation configurations, access-control technologies, onboarding/offboarding, user permissions, and technology inventory.</li>
+                        <li>Provided remote and onsite technical support and documented incidents, resolutions, and configuration changes.</li>
+                    </ul>
+                </article>
+
+                <article class="job-block">
+                    <h3>Cable Technician</h3>
+                    <div class="company-location">
+                        WCC-Cable — COX Communications Contractor — Herndon, VA
+                    </div>
+                    <div class="date-badge">December 2015 – June 2017</div>
+
+                    <ul class="bullet-list">
+                        <li>Installed and repaired telecommunications services for residential and commercial customers, including coaxial cable, Cat5 Ethernet, RJ45, RJ11, modems, routers, and related equipment.</li>
+                        <li>Diagnosed signal, connectivity, cabling, and equipment issues; tested and calibrated devices to ensure reliable service.</li>
+                        <li>Maintained tools and inventory, assisted junior technicians, educated customers, and documented installations and repairs.</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section class="card">
+                <div class="section-heading">Technical Skills</div>
+
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <strong>Security</strong>
+                        <span>
+                            Microsoft Defender, Nessus, Splunk, Wazuh, vulnerability management, threat hunting, IOC analysis, incident response, endpoint security, phishing investigation, security hardening
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>Offensive Security</strong>
+                        <span>
+                            Burp Suite, Metasploit, Cobalt Strike, Sliver, Mythic, penetration testing, Active Directory security assessments, vulnerability exploitation, adversary simulation
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>Forensics</strong>
+                        <span>
+                            Autopsy, FTK, disk-image analysis, Windows/browser/Outlook artifacts, Prefetch analysis, persistence analysis, timeline reconstruction, SHA-256 hashing
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>Platforms</strong>
+                        <span>
+                            Microsoft 365, Entra ID, Active Directory, Group Policy, Windows Server, Windows 10/11, Linux, macOS, Azure, AWS
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>Networking</strong>
+                        <span>
+                            TCP/IP, DNS, DHCP, VPN, Ethernet, switching, routing, Wi-Fi, network troubleshooting, backup and recovery
+                        </span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const htmlElement = document.documentElement;
+
+        function toggleTheme() {
+            const currentTheme = htmlElement.getAttribute("data-theme") || "light";
+            const newTheme = currentTheme === "light" ? "dark" : "light";
+
+            htmlElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("resume_theme", newTheme);
+        }
+
+        const savedTheme = localStorage.getItem("resume_theme");
+
+        if (savedTheme) {
+            htmlElement.setAttribute("data-theme", savedTheme);
+        } else if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+            htmlElement.setAttribute("data-theme", "dark");
+        }
+    </script>
 </body>
 </html>
-```
-
-## Key Updates Made:
-
-✅ **All personal info updated**: Name, title, location, contact details, clearance status  
-✅ **9+ years of experience**: All 4 jobs with complete descriptions  
-✅ **9 core competencies** + security tools list  
-✅ **12 certifications** (CISM, CEH, CompTIA suite, AWS, Azure, LPIC-1, ITIL 4)  
-✅ **Master's degree in progress** at WGU  
-✅ **Technical skills grid**: Security, Offensive Security, Forensics, Platforms, Networking  
-✅ **All 5 languages** (English, Arabic, French, Spanish, Turkish)  
-✅ **Government environment experience** highlighted  
-✅ **Print & dark mode ready**
-
-You can save this as `.html` and open it in any browser. Print to PDF for a polished version!
