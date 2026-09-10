@@ -1,3 +1,6 @@
+Here is the **complete, ready-to-paste `index.html`** with the larger, functional translation dropdown built in. Replace your entire file on GitHub with this (copy from `<!DOCTYPE html>` to `</html>`, no backticks).
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,6 +46,7 @@
             font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.55;
             transition: background-color 0.3s ease, color 0.3s ease;
+            top: 0 !important;
         }
 
         .container {
@@ -81,11 +85,12 @@
 
         .theme-toggle {
             border: none;
-            border-radius: 8px;
-            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            min-height: 58px;
+            padding: 0.6rem 1.1rem;
             color: #ffffff;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 700;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.18);
@@ -95,64 +100,126 @@
             opacity: 0.9;
         }
 
-        /* ---------- TRANSLATE WIDGET ---------- */
+        /* ============================================================
+           LARGE FUNCTIONAL TRANSLATION DROPDOWN
+           ============================================================ */
         .translate-widget {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.4rem 0.65rem;
+            gap: 0.65rem;
+            min-height: 58px;
+            padding: 0.5rem 0.7rem 0.5rem 0.9rem;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             box-shadow: var(--shadow);
-            min-height: 38px;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .translate-widget:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-primary);
         }
 
         .translate-icon {
-            font-size: 1rem;
+            flex: 0 0 auto;
+            font-size: 1.35rem;
             line-height: 1;
         }
 
-        #google_translate_element {
-            display: inline-block;
+        .translate-title {
+            flex: 0 0 auto;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 800;
+            white-space: nowrap;
         }
 
-        /* Google injects its own widget markup — restyle it to match the site */
-        .goog-te-gadget {
+        #google_translate_element {
+            display: inline-flex;
+            align-items: center;
+            min-width: 210px;
+        }
+
+        #google_translate_element .goog-te-gadget {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.4rem;
+            margin: 0 !important;
+            color: transparent !important;
             font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
             font-size: 0 !important;
         }
 
-        .goog-te-gadget-simple {
-            background-color: transparent !important;
-            border: none !important;
-            padding: 0 !important;
-            cursor: pointer;
-            display: inline-flex !important;
-            align-items: center;
-        }
-
-        .goog-te-gadget-simple .goog-te-menu-value {
+        #google_translate_element .goog-te-combo {
+            width: 220px !important;
+            min-width: 220px !important;
+            min-height: 42px !important;
+            margin: 0 !important;
+            padding: 0.5rem 0.7rem !important;
             color: var(--text-main) !important;
-            font-size: 0.85rem !important;
+            background-color: var(--bg-color) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            outline: none !important;
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+            font-size: 0.95rem !important;
             font-weight: 700 !important;
         }
 
-        .goog-te-gadget-simple .goog-te-menu-value span {
-            color: var(--text-main) !important;
+        #google_translate_element .goog-te-combo:hover,
+        #google_translate_element .goog-te-combo:focus {
+            border-color: var(--accent-primary) !important;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12) !important;
         }
 
-        .goog-te-gadget-icon {
+        #google_translate_element .goog-te-combo option {
+            color: #1e293b !important;
+            background: #ffffff !important;
+            font-size: 0.95rem !important;
+        }
+
+        .translate-loading {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .translate-reset {
+            flex: 0 0 auto;
+            min-width: 44px;
+            min-height: 42px;
+            padding: 0.4rem 0.65rem;
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 800;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .translate-reset:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* Hide the Google banner / tooltip that Google injects */
+        .goog-te-banner-frame,
+        .goog-te-banner-frame.skiptranslate,
+        .VIpgJd-ZVi9od-ORHb-OEVmcd,
+        #goog-gt-tt,
+        .goog-te-balloon-frame,
+        .VIpgJd-yAWNEb-L7lbkb {
             display: none !important;
         }
 
-        /* Hide the automatic Google top banner that pushes the page down */
-        .goog-te-banner-frame.skiptranslate {
-            display: none !important;
-        }
-
-        body {
-            top: 0px !important;
+        .goog-text-highlight {
+            background: transparent !important;
+            box-shadow: none !important;
         }
 
         .card {
@@ -169,10 +236,7 @@
             transform: translateY(-2px);
         }
 
-        h1,
-        h2,
-        h3,
-        p {
+        h1, h2, h3, p {
             margin-top: 0;
         }
 
@@ -190,8 +254,7 @@
             line-height: 1.35;
         }
 
-        p,
-        li {
+        p, li {
             color: var(--text-muted);
             font-size: 0.93rem;
         }
@@ -207,7 +270,6 @@
             text-transform: uppercase;
         }
 
-        /* ---------- PROFILE PHOTO ---------- */
         .profile-card {
             text-align: center;
         }
@@ -231,7 +293,6 @@
             object-fit: cover;
             object-position: 50% 12%;
         }
-        /* ----------------------------------- */
 
         .role-title {
             margin: 0.5rem 0 0;
@@ -407,7 +468,47 @@
 
             .top-bar-controls {
                 width: 100%;
-                justify-content: space-between;
+                align-items: stretch;
+            }
+
+            .translate-widget {
+                flex: 1 1 100%;
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            #google_translate_element {
+                flex: 1;
+                min-width: 150px;
+            }
+
+            #google_translate_element .goog-te-gadget {
+                width: 100%;
+            }
+
+            #google_translate_element .goog-te-combo {
+                width: 100% !important;
+                min-width: 150px !important;
+            }
+        }
+
+        @media screen and (max-width: 520px) {
+            .translate-title {
+                display: none;
+            }
+
+            .translate-widget {
+                gap: 0.45rem;
+                padding: 0.45rem 0.55rem;
+            }
+
+            #google_translate_element {
+                min-width: 125px;
+            }
+
+            #google_translate_element .goog-te-combo {
+                min-width: 125px !important;
+                font-size: 0.85rem !important;
             }
         }
 
@@ -431,8 +532,9 @@
 
             .top-bar,
             .theme-toggle,
-            .translate-widget {
-                display: none;
+            .translate-widget,
+            #google_translate_element {
+                display: none !important;
             }
 
             .card {
@@ -459,17 +561,11 @@
                 border-color: #ffffff;
             }
 
-            h1,
-            h3,
-            .contact-value,
-            .competency-title,
-            .clean-list li {
+            h1, h3, .contact-value, .competency-title, .clean-list li {
                 color: #000000;
             }
 
-            p,
-            li,
-            .date-badge {
+            p, li, .date-badge {
                 color: #333333;
             }
 
@@ -477,10 +573,7 @@
                 grid-template-columns: 1fr 1fr;
             }
 
-            .skill-category,
-            .status-badge,
-            .date-badge,
-            .tag {
+            .skill-category, .status-badge, .date-badge, .tag {
                 background: #f5f5f5;
             }
         }
@@ -494,10 +587,26 @@
             <div class="site-label">Cybersecurity Resume</div>
 
             <div class="top-bar-controls">
-                <!-- TRANSLATE BUTTON / DROPDOWN -->
-                <div class="translate-widget" title="Translate this page">
-                    <span class="translate-icon">🌐</span>
-                    <div id="google_translate_element"></div>
+                <!-- TRANSLATE DROPDOWN -->
+                <div class="translate-widget" title="Translate this resume">
+                    <span class="translate-icon" aria-hidden="true">🌐</span>
+
+                    <span class="translate-title notranslate" translate="no">Translate</span>
+
+                    <div id="google_translate_element">
+                        <span class="translate-loading">Loading languages…</span>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="translate-reset notranslate"
+                        translate="no"
+                        onclick="restoreOriginalLanguage()"
+                        title="Return to the original English resume"
+                        aria-label="Return to English"
+                    >
+                        EN
+                    </button>
                 </div>
 
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Switch between light and dark mode">
@@ -509,7 +618,6 @@
         <aside>
             <section class="card profile-card">
 
-                <!-- PROFILE PHOTO -->
                 <div class="profile-photo-wrap">
                     <img class="profile-photo" src="profile.jpg.png" alt="Jaouad El Ghouzi">
                 </div>
@@ -706,4 +814,194 @@
                     <div class="company-location">
                         Nova Marketing Inc — Manassas, VA
                     </div>
-                    <div class="date-badge">April 2020 – 
+                    <div class="date-badge">April 2020 – December 2024</div>
+
+                    <ul class="bullet-list">
+                        <li>Administered and supported Windows workstations, servers, network devices, applications, and business technology infrastructure.</li>
+                        <li>Provided remote and onsite support; installed, configured, upgraded, maintained, and troubleshot desktops, servers, peripherals, and network equipment.</li>
+                        <li>Designed and implemented SMB network solutions including IP addressing, switching, routing, wireless connectivity, and related infrastructure.</li>
+                        <li>Managed user accounts, permissions, workstation configurations, backup systems, recovery operations, patching, software deployment, and system maintenance.</li>
+                        <li>Resolved escalated hardware, software, authentication, connectivity, and network issues while minimizing business disruption and maintaining technical documentation.</li>
+                    </ul>
+                </article>
+
+                <article class="job-block">
+                    <h3>Computer &amp; Networking System Technician</h3>
+                    <div class="company-location">
+                        Yakshna Solutions, Inc. (YSI) — Herndon, VA
+                    </div>
+                    <div class="date-badge">July 2017 – March 2020</div>
+
+                    <ul class="bullet-list">
+                        <li>Monitored and troubleshot computer systems, network infrastructure, applications, hardware, and security-related issues.</li>
+                        <li>Managed organizational backup and restore operations and participated in investigations involving security incidents and suspicious system behavior.</li>
+                        <li>Performed manual and automated testing of electronic filing applications and recommended corrective actions for technical findings.</li>
+                        <li>Managed network systems, workstation configurations, access-control technologies, onboarding/offboarding, user permissions, and technology inventory.</li>
+                        <li>Provided remote and onsite technical support and documented incidents, resolutions, and configuration changes.</li>
+                    </ul>
+                </article>
+
+                <article class="job-block">
+                    <h3>Cable Technician</h3>
+                    <div class="company-location">
+                        WCC-Cable — COX Communications Contractor — Herndon, VA
+                    </div>
+                    <div class="date-badge">December 2015 – June 2017</div>
+
+                    <ul class="bullet-list">
+                        <li>Installed and repaired telecommunications services for residential and commercial customers, including coaxial cable, Cat5 Ethernet, RJ45, RJ11, modems, routers, and related equipment.</li>
+                        <li>Diagnosed signal, connectivity, cabling, and equipment issues; tested and calibrated devices to ensure reliable service.</li>
+                        <li>Maintained tools and inventory, assisted junior technicians, educated customers, and documented installations and repairs.</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section class="card">
+                <div class="section-heading">Technical Skills</div>
+
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <strong>Security</strong>
+                        <span>
+                            Microsoft Defender, Nessus, Splunk, Wazuh, vulnerability management, threat hunting, IOC analysis, incident response, endpoint security, phishing investigation, security hardening
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>Offensive Security</strong>
+                        <span>
+                            Burp Suite, Metasploit, Cobalt Strike, Sliver, Mythic, penetration testing, Active Directory security assessments, vulnerability exploitation, adversary simulation
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>Forensics</strong>
+                        <span>
+                            Autopsy, FTK, disk-image analysis, Windows/browser/Outlook artifacts, Prefetch analysis, persistence analysis, timeline reconstruction, SHA-256 hashing
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>Platforms</strong>
+                        <span>
+                            Microsoft 365, Entra ID, Active Directory, Group Policy, Windows Server, Windows 10/11, Linux, macOS, Azure, AWS
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>Networking</strong>
+                        <span>
+                            TCP/IP, DNS, DHCP, VPN, Ethernet, switching, routing, Wi-Fi, network troubleshooting, backup and recovery
+                        </span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const htmlElement = document.documentElement;
+
+        /* ---------- LIGHT / DARK THEME ---------- */
+        function toggleTheme() {
+            const currentTheme = htmlElement.getAttribute("data-theme") || "light";
+            const newTheme = currentTheme === "light" ? "dark" : "light";
+
+            htmlElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("resume_theme", newTheme);
+        }
+
+        const savedTheme = localStorage.getItem("resume_theme");
+
+        if (savedTheme) {
+            htmlElement.setAttribute("data-theme", savedTheme);
+        } else if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+            htmlElement.setAttribute("data-theme", "dark");
+        }
+
+        /* ---------- GOOGLE TRANSLATE ---------- */
+        /*
+         * No "includedLanguages" is set, so Google shows every language
+         * supported by its website translation service in the dropdown.
+         */
+        window.googleTranslateElementInit = function () {
+            const translateContainer = document.getElementById("google_translate_element");
+
+            if (translateContainer) {
+                translateContainer.innerHTML = "";
+            }
+
+            new google.translate.TranslateElement(
+                {
+                    pageLanguage: "en",
+                    autoDisplay: false,
+                    multilanguagePage: true
+                },
+                "google_translate_element"
+            );
+        };
+
+        /* Remove Google's translation cookie and reload the original English page */
+        function restoreOriginalLanguage() {
+            const host = window.location.hostname;
+            const rootDomain = getRootDomain(host);
+
+            const cookieDomains = [
+                "",
+                host ? "." + host.replace(/^www\./, "") : "",
+                rootDomain ? "." + rootDomain : ""
+            ];
+
+            cookieDomains.forEach(function (domain) {
+                let cookie =
+                    "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0; path=/; SameSite=Lax";
+
+                if (domain) {
+                    cookie += "; domain=" + domain;
+                }
+
+                document.cookie = cookie;
+            });
+
+            window.location.reload();
+        }
+
+        function getRootDomain(hostname) {
+            if (
+                !hostname ||
+                hostname === "localhost" ||
+                /^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)
+            ) {
+                return "";
+            }
+
+            const parts = hostname.replace(/^www\./, "").split(".");
+
+            if (parts.length < 2) {
+                return "";
+            }
+
+            return parts.slice(-2).join(".");
+        }
+    </script>
+
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
+</body>
+</html>
+```
+
+## How to test
+
+1. Commit the file on GitHub and wait about a minute.
+2. Open your live site (`https://elghouzi.com`) and press **Ctrl + F5**.
+3. Click the **Select Language** dropdown → choose any language (French, Arabic, Spanish, Turkish, etc.).
+4. Click the **EN** button to return to English.
+
+## If the dropdown still shows "Loading languages…"
+
+- The Google script is being blocked. Temporarily disable any ad blocker / privacy extension for `translate.google.com`.
+- Make sure you are testing on the **live website**, not by double-clicking the file on your computer (`file://`), where Google Translate often won't load.
+- Check that your photo file is really named `profile.jpg.png` in the repo — otherwise change the `src` back to `profile.jpg`.
