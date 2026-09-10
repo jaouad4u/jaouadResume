@@ -25,6 +25,7 @@
             --glow: rgba(0, 242, 254, 0.25);
             --shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
             --nav-bg: rgba(7, 11, 20, 0.88);
+            --page-pad: clamp(1.25rem, 3.5vw, 3.5rem);
         }
 
         [data-theme="light"] {
@@ -52,17 +53,19 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 86px;
+            scroll-padding-top: 100px;
+            font-size: 18px; /* base bump — everything scales up */
         }
 
         body {
             background: var(--bg);
             color: var(--text);
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-            line-height: 1.6;
+            line-height: 1.65;
             overflow-x: hidden;
             position: relative;
             min-height: 100vh;
+            width: 100%;
         }
 
         a {
@@ -81,23 +84,22 @@
             pointer-events: none;
         }
 
-        /* Subtle Cyber Grid Overlay */
         .cyber-grid-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-image: 
+            background-image:
                 linear-gradient(to right, rgba(0, 242, 254, 0.03) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(0, 242, 254, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+            background-size: 56px 56px;
             pointer-events: none;
             z-index: 1;
         }
 
         /* ============================================================
-           NAVBAR & TRANSLATION WIDGET
+           NAVBAR
            ============================================================ */
         nav {
             position: fixed;
@@ -109,53 +111,56 @@
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border);
-            transition: all 0.3s ease;
         }
 
         .nav-wrap {
             width: 100%;
-            max-width: 1400px;
+            max-width: none;
             margin: 0 auto;
-            padding: 0.75rem 2rem;
+            padding: 1rem var(--page-pad);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1rem;
+            gap: 1.25rem;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
+            gap: 0.8rem;
             font-weight: 800;
             letter-spacing: 0.8px;
-            font-size: 1.05rem;
+            font-size: 1.2rem;
+            white-space: nowrap;
         }
 
         .logo-box {
-            width: 36px;
-            height: 36px;
-            border-radius: 9px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             background: linear-gradient(135deg, var(--cyan), var(--indigo));
             color: #ffffff;
             display: grid;
             place-items: center;
             font-weight: 900;
-            box-shadow: 0 0 15px var(--glow);
+            font-size: 1.1rem;
+            box-shadow: 0 0 18px var(--glow);
         }
 
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
             list-style: none;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .nav-links a {
-            padding: 0.45rem 0.85rem;
-            border-radius: 7px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            padding: 0.65rem 1.1rem;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
             color: var(--muted);
             transition: all 0.25s ease;
         }
@@ -168,17 +173,20 @@
         .nav-controls {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.85rem;
+            flex-shrink: 0;
         }
 
-        /* Translation Dropdown Container */
         .translate-box {
             display: flex;
             align-items: center;
+            gap: 0.35rem;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            padding: 0.45rem 0.75rem;
+            font-size: 1rem;
+            min-height: 48px;
         }
 
         #google_translate_element {
@@ -189,7 +197,7 @@
             background-color: transparent !important;
             border: none !important;
             padding: 2px !important;
-            font-size: 0.82rem !important;
+            font-size: 0.95rem !important;
             cursor: pointer;
         }
 
@@ -201,12 +209,13 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             color: var(--text);
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
             display: grid;
             place-items: center;
             cursor: pointer;
+            font-size: 1.25rem;
             transition: 0.25s;
         }
 
@@ -216,85 +225,96 @@
         }
 
         /* ============================================================
-           MAIN LAYOUT (FULL PAGE)
+           MAIN LAYOUT — FULL WIDTH
            ============================================================ */
         main {
             position: relative;
             z-index: 2;
             width: 100%;
-            max-width: 1400px;
+            max-width: none;
             margin: 0 auto;
-            padding: 5.5rem 2rem 3rem;
+            padding: 7rem var(--page-pad) 4rem;
         }
 
         section {
-            padding: 3.5rem 0;
+            padding: 4.5rem 0;
+            width: 100%;
         }
 
         .sec-header {
             text-align: center;
-            margin-bottom: 2.8rem;
+            margin-bottom: 3.25rem;
         }
 
         .cyber-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.3rem 0.9rem;
+            gap: 0.5rem;
+            padding: 0.45rem 1.15rem;
             border-radius: 999px;
             background: rgba(0, 242, 254, 0.1);
             border: 1px solid var(--cyan);
             color: var(--cyan);
-            font-size: 0.72rem;
+            font-size: 0.85rem;
             font-weight: 800;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.6px;
             text-transform: uppercase;
         }
 
         .sec-header h2 {
-            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
-            margin-top: 0.6rem;
-            letter-spacing: -0.5px;
+            font-size: clamp(2.2rem, 4.5vw, 3.25rem);
+            margin-top: 0.85rem;
+            letter-spacing: -0.6px;
+            font-weight: 900;
         }
 
         .sec-header p {
             color: var(--muted);
-            max-width: 650px;
-            margin: 0.5rem auto 0;
-            font-size: 0.95rem;
+            max-width: 900px;
+            margin: 0.75rem auto 0;
+            font-size: 1.15rem;
         }
 
         /* ============================================================
-           HERO SECTION
+           HERO — LARGE / FULL PAGE
            ============================================================ */
+        #home {
+            min-height: calc(100vh - 7rem);
+            display: flex;
+            align-items: center;
+            padding-top: 1rem;
+            padding-bottom: 2rem;
+        }
+
         .hero-grid {
             display: grid;
-            grid-template-columns: 1fr 360px;
-            gap: 3rem;
+            grid-template-columns: 1.35fr 0.65fr;
+            gap: clamp(2rem, 5vw, 5rem);
             align-items: center;
-            padding: 3rem 0 4rem;
+            width: 100%;
+            padding: 2rem 0 3rem;
         }
 
         .terminal-banner {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.35rem 0.85rem;
+            gap: 0.65rem;
+            padding: 0.55rem 1.1rem;
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid var(--emerald);
-            border-radius: 6px;
+            border-radius: 8px;
             font-family: monospace;
-            font-size: 0.82rem;
+            font-size: 1rem;
             color: var(--emerald);
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
         }
 
         .pulse-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: var(--emerald);
-            box-shadow: 0 0 10px var(--emerald);
+            box-shadow: 0 0 12px var(--emerald);
             animation: pulse 1.8s infinite;
         }
 
@@ -304,11 +324,11 @@
         }
 
         .hero-text h1 {
-            font-size: clamp(2.4rem, 5vw, 3.8rem);
-            line-height: 1.1;
+            font-size: clamp(2.8rem, 6.5vw, 5rem);
+            line-height: 1.05;
             font-weight: 900;
-            letter-spacing: -1px;
-            margin-bottom: 0.8rem;
+            letter-spacing: -1.5px;
+            margin-bottom: 1rem;
             background: linear-gradient(120deg, var(--text) 40%, var(--cyan) 85%);
             -webkit-background-clip: text;
             background-clip: text;
@@ -317,34 +337,34 @@
 
         .all-titles {
             color: var(--cyan);
-            font-size: clamp(1.05rem, 2vw, 1.3rem);
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-bottom: 1rem;
-            line-height: 1.4;
+            font-size: clamp(1.2rem, 2.4vw, 1.65rem);
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            margin-bottom: 1.35rem;
+            line-height: 1.45;
         }
 
         .hero-desc {
             color: var(--muted);
-            font-size: 1.02rem;
-            line-height: 1.7;
-            max-width: 680px;
-            margin-bottom: 1.8rem;
+            font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+            line-height: 1.75;
+            max-width: 920px;
+            margin-bottom: 2.1rem;
         }
 
         .chips-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.6rem;
-            margin-bottom: 2rem;
+            gap: 0.85rem;
+            margin-bottom: 2.4rem;
         }
 
         .meta-chip {
-            padding: 0.4rem 0.9rem;
-            border-radius: 8px;
+            padding: 0.65rem 1.2rem;
+            border-radius: 10px;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            font-size: 0.82rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--muted);
         }
@@ -352,18 +372,18 @@
         .cta-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.1rem;
         }
 
         .btn {
-            padding: 0.85rem 1.6rem;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.92rem;
+            padding: 1.05rem 1.9rem;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.05rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 0.55rem;
+            gap: 0.65rem;
             transition: all 0.25s ease;
             border: 1px solid transparent;
         }
@@ -371,12 +391,12 @@
         .btn-cyan {
             background: linear-gradient(135deg, var(--cyan), var(--indigo));
             color: #ffffff;
-            box-shadow: 0 6px 20px var(--glow);
+            box-shadow: 0 8px 24px var(--glow);
         }
 
         .btn-cyan:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 28px var(--glow);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 32px var(--glow);
         }
 
         .btn-outline {
@@ -388,20 +408,22 @@
         .btn-outline:hover {
             border-color: var(--cyan);
             color: var(--cyan);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
         }
 
-        /* Profile Photo with Radar Scanner Frame */
+        /* Profile Photo — larger */
         .photo-container {
             position: relative;
-            width: 320px;
-            height: 320px;
+            width: min(440px, 38vw);
+            height: min(440px, 38vw);
             margin: 0 auto;
+            max-width: 100%;
+            aspect-ratio: 1 / 1;
         }
 
         .photo-radar {
             position: absolute;
-            inset: -12px;
+            inset: -16px;
             border-radius: 50%;
             border: 2px dashed rgba(0, 242, 254, 0.4);
             animation: radarSpin 24s linear infinite;
@@ -415,9 +437,9 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            padding: 6px;
+            padding: 8px;
             background: linear-gradient(135deg, var(--cyan), var(--indigo));
-            box-shadow: 0 0 35px var(--glow);
+            box-shadow: 0 0 45px var(--glow);
             position: relative;
             overflow: hidden;
         }
@@ -433,42 +455,44 @@
         }
 
         /* ============================================================
-           CERTIFICATIONS SECTION WITH BADGES & POPUPS
+           CERTIFICATIONS
            ============================================================ */
         .certs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.3rem;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.6rem;
+            width: 100%;
         }
 
         .cert-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.35rem;
+            border-radius: 16px;
+            padding: 1.65rem 1.5rem;
             display: flex;
             align-items: center;
-            gap: 1.1rem;
+            gap: 1.25rem;
             cursor: pointer;
             position: relative;
             transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
             box-shadow: var(--shadow);
+            min-height: 110px;
         }
 
         .cert-card:hover {
             transform: translateY(-6px);
             border-color: var(--cyan);
-            box-shadow: 0 12px 30px var(--glow);
+            box-shadow: 0 14px 34px var(--glow);
         }
 
         .cert-badge-icon {
-            width: 52px;
-            height: 52px;
+            width: 64px;
+            height: 64px;
             flex: none;
-            border-radius: 12px;
+            border-radius: 14px;
             display: grid;
             place-items: center;
-            font-size: 1.4rem;
+            font-size: 1.7rem;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -482,13 +506,13 @@
         .badge-itil { background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; }
 
         .cert-info h4 {
-            font-size: 1rem;
-            margin-bottom: 0.2rem;
+            font-size: 1.15rem;
+            margin-bottom: 0.3rem;
             color: var(--text);
         }
 
         .cert-info span {
-            font-size: 0.8rem;
+            font-size: 0.95rem;
             color: var(--muted);
             font-weight: 600;
         }
@@ -496,12 +520,13 @@
         .inspect-tag {
             margin-left: auto;
             color: var(--cyan);
-            font-size: 0.75rem;
-            font-weight: 700;
+            font-size: 0.9rem;
+            font-weight: 800;
+            white-space: nowrap;
         }
 
         /* ============================================================
-           POPUP MODAL FOR CERTIFICATES
+           MODAL
            ============================================================ */
         .modal-backdrop {
             position: fixed;
@@ -522,10 +547,10 @@
             background: #0d1527;
             border: 2px solid var(--cyan);
             box-shadow: 0 0 50px var(--glow);
-            border-radius: 16px;
-            max-width: 540px;
+            border-radius: 18px;
+            max-width: 640px;
             width: 100%;
-            padding: 2rem;
+            padding: 2.4rem;
             position: relative;
             animation: modalPop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
         }
@@ -539,11 +564,12 @@
             position: absolute;
             top: 1rem;
             right: 1.2rem;
-            font-size: 1.6rem;
+            font-size: 2rem;
             color: var(--muted);
             cursor: pointer;
             background: none;
             border: none;
+            line-height: 1;
         }
 
         .modal-close:hover {
@@ -553,59 +579,61 @@
         .modal-badge-row {
             display: flex;
             align-items: center;
-            gap: 1.2rem;
-            margin-bottom: 1.2rem;
+            gap: 1.3rem;
+            margin-bottom: 1.3rem;
         }
 
         .modal-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 14px;
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
             display: grid;
             place-items: center;
-            font-size: 1.8rem;
+            font-size: 2.1rem;
+            background: linear-gradient(135deg, var(--cyan), var(--indigo));
         }
 
         .modal-badge-row h3 {
-            font-size: 1.35rem;
+            font-size: 1.5rem;
             color: #ffffff;
         }
 
         .modal-badge-row p {
             color: var(--cyan);
-            font-size: 0.85rem;
+            font-size: 1rem;
             font-weight: 700;
         }
 
         .modal-desc {
             color: #cbd5e1;
-            font-size: 0.95rem;
-            line-height: 1.65;
-            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1.3rem;
         }
 
         .modal-skills-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.45rem;
+            gap: 0.55rem;
         }
 
         .modal-skill-tag {
-            padding: 0.3rem 0.65rem;
-            border-radius: 6px;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
             background: rgba(0, 242, 254, 0.12);
             border: 1px solid rgba(0, 242, 254, 0.25);
             color: var(--cyan);
-            font-size: 0.78rem;
+            font-size: 0.9rem;
             font-weight: 700;
         }
 
         /* ============================================================
-           EXPERIENCE SECTION
+           EXPERIENCE
            ============================================================ */
         .timeline {
             position: relative;
-            padding-left: 2rem;
+            padding-left: 2.75rem;
+            width: 100%;
         }
 
         .timeline::before {
@@ -613,8 +641,8 @@
             position: absolute;
             top: 0;
             bottom: 0;
-            left: 5px;
-            width: 2px;
+            left: 7px;
+            width: 3px;
             background: linear-gradient(180deg, var(--cyan), var(--indigo), transparent);
         }
 
@@ -622,26 +650,27 @@
             position: relative;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.8rem;
-            margin-bottom: 2rem;
+            border-radius: 16px;
+            padding: 2.2rem 2rem;
+            margin-bottom: 2.25rem;
             box-shadow: var(--shadow);
+            width: 100%;
         }
 
         .job-card::before {
             content: "";
             position: absolute;
-            left: -2.35rem;
-            top: 1.8rem;
-            width: 14px;
-            height: 14px;
+            left: -2.95rem;
+            top: 2.2rem;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: var(--cyan);
-            box-shadow: 0 0 12px var(--cyan);
+            box-shadow: 0 0 14px var(--cyan);
         }
 
         .job-role {
-            font-size: 1.2rem;
+            font-size: 1.45rem;
             font-weight: 800;
             color: var(--text);
         }
@@ -649,113 +678,133 @@
         .job-company {
             color: var(--cyan);
             font-weight: 700;
-            font-size: 0.95rem;
-            margin-bottom: 0.4rem;
+            font-size: 1.15rem;
+            margin: 0.35rem 0 0.55rem;
         }
 
         .job-date {
             display: inline-block;
-            padding: 0.2rem 0.65rem;
-            border-radius: 5px;
+            padding: 0.35rem 0.85rem;
+            border-radius: 6px;
             background: rgba(0, 242, 254, 0.08);
             border: 1px solid var(--border);
             color: var(--muted);
-            font-size: 0.8rem;
+            font-size: 0.95rem;
             font-weight: 700;
-            margin-bottom: 0.9rem;
+            margin-bottom: 1rem;
         }
 
         .job-bullets {
-            padding-left: 1.2rem;
+            padding-left: 1.35rem;
         }
 
         .job-bullets li {
             color: var(--muted);
-            margin-bottom: 0.5rem;
-            font-size: 0.93rem;
+            margin-bottom: 0.65rem;
+            font-size: 1.08rem;
+            line-height: 1.6;
         }
 
         /* ============================================================
-           COMPETENCIES & SKILLS GRID
+           SKILLS
            ============================================================ */
         .skills-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 1.75rem;
+            width: 100%;
         }
 
         .skill-box {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.6rem;
+            border-radius: 16px;
+            padding: 2rem 1.85rem;
             box-shadow: var(--shadow);
+            min-height: 180px;
         }
 
         .skill-box h3 {
-            font-size: 1.05rem;
+            font-size: 1.3rem;
             color: var(--cyan);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.85rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.55rem;
         }
 
         .skill-box p {
             color: var(--muted);
-            font-size: 0.92rem;
-            line-height: 1.6;
+            font-size: 1.08rem;
+            line-height: 1.7;
         }
 
         /* ============================================================
-           CONTACT SECTION
+           CONTACT
            ============================================================ */
         .contact-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
         }
 
         .contact-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.6rem;
+            border-radius: 14px;
+            padding: 2.1rem 1.6rem;
             text-align: center;
             transition: all 0.25s;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .contact-card:hover {
             border-color: var(--cyan);
-            transform: translateY(-4px);
+            transform: translateY(-5px);
         }
 
         .contact-card .c-icon {
-            font-size: 1.6rem;
-            margin-bottom: 0.5rem;
+            font-size: 2.1rem;
+            margin-bottom: 0.65rem;
+        }
+
+        .contact-card small {
+            font-size: 0.9rem;
+            color: var(--muted);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .contact-card b {
             display: block;
-            margin-top: 0.25rem;
+            margin-top: 0.4rem;
             color: var(--text);
-            font-size: 0.95rem;
+            font-size: 1.15rem;
+            word-break: break-word;
         }
 
         footer {
             border-top: 1px solid var(--border);
-            padding: 2rem 0;
+            padding: 2.5rem var(--page-pad);
             text-align: center;
             color: var(--muted);
-            font-size: 0.88rem;
+            font-size: 1.05rem;
             position: relative;
             z-index: 2;
+            width: 100%;
         }
 
         /* ============================================================
-           PRINT STYLES FOR CLEAN PDF EXPORT
+           PRINT
            ============================================================ */
         @media print {
+            html { font-size: 12pt; }
             body {
                 background: #ffffff !important;
                 color: #000000 !important;
@@ -766,6 +815,9 @@
             main {
                 max-width: 100% !important;
                 padding: 0 !important;
+            }
+            #home {
+                min-height: auto !important;
             }
             .hero-grid {
                 display: block !important;
@@ -780,18 +832,18 @@
                 -webkit-text-fill-color: #000000 !important;
                 font-size: 2rem !important;
             }
-            /* Explicit Titles for PDF */
             .all-titles {
                 color: #000000 !important;
                 font-size: 1.15rem !important;
                 font-weight: 800 !important;
                 margin-bottom: 0.4rem !important;
             }
-            .job-card, .cert-card, .skill-box {
+            .job-card, .cert-card, .skill-box, .contact-card {
                 background: #ffffff !important;
                 border: 1px solid #cccccc !important;
                 box-shadow: none !important;
                 page-break-inside: avoid;
+                min-height: 0 !important;
             }
             .timeline::before, .job-card::before {
                 display: none;
@@ -804,15 +856,19 @@
             }
         }
 
-        @media (max-width: 900px) {
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 1100px) {
+            html { font-size: 17px; }
             .hero-grid {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
             .photo-container {
                 order: -1;
-                width: 240px;
-                height: 240px;
+                width: min(320px, 70vw);
+                height: min(320px, 70vw);
             }
             .hero-desc, .chips-row, .cta-row {
                 justify-content: center;
@@ -821,17 +877,44 @@
             .nav-links {
                 display: none;
             }
+            .certs-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            html { font-size: 16px; }
+            .logo span:last-child {
+                display: none;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .photo-container {
+                width: min(260px, 78vw);
+                height: min(260px, 78vw);
+            }
+            .timeline {
+                padding-left: 1.75rem;
+            }
+            .job-card::before {
+                left: -1.95rem;
+                width: 14px;
+                height: 14px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Cyber Matrix / Particle Network Background -->
     <canvas id="cyber-canvas"></canvas>
     <div class="cyber-grid-overlay"></div>
 
-    <!-- Top Navigation -->
     <nav>
         <div class="nav-wrap">
             <a href="#home" class="logo">
@@ -848,18 +931,15 @@
             </ul>
 
             <div class="nav-controls">
-                <!-- Google Translate Dropdown at Top Right -->
                 <div class="translate-box" title="Translate Portfolio">
                     🌐 <div id="google_translate_element"></div>
                 </div>
-
                 <button class="theme-btn" id="themeToggle" title="Toggle Theme">🌓</button>
             </div>
         </div>
     </nav>
 
     <main>
-        <!-- ================= HERO ================= -->
         <section id="home">
             <div class="hero-grid">
                 <div class="hero-text">
@@ -870,7 +950,6 @@
 
                     <h1>Jaouad El Ghouzi</h1>
 
-                    <!-- All 3 Requested Titles prominently shown -->
                     <div class="all-titles">
                         CYBERSECURITY ENGINEER &bull; PENETRATION TESTER &bull; SYSTEMS ADMINISTRATOR
                     </div>
@@ -887,7 +966,6 @@
                     </div>
 
                     <div class="cta-row">
-                        <!-- Direct Print PDF button ensuring all 3 titles are included -->
                         <button class="btn btn-cyan" onclick="window.print()">
                             📄 Download Full PDF
                         </button>
@@ -900,13 +978,12 @@
                     </div>
                 </div>
 
-                <!-- Radar Profile Image -->
                 <div class="photo-container">
                     <div class="photo-radar"></div>
                     <div class="photo-frame">
-                        <img 
-                            class="profile-img" 
-                            src="profile.jpg.png" 
+                        <img
+                            class="profile-img"
+                            src="profile.jpg.png"
                             alt="Jaouad El Ghouzi"
                             onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Jaouad+El+Ghouzi&background=00f2fe&color=070b14&size=400';"
                         >
@@ -915,7 +992,6 @@
             </div>
         </section>
 
-        <!-- ================= CERTIFICATIONS WITH BADGES & POPUPS ================= -->
         <section id="certs">
             <div class="sec-header">
                 <span class="cyber-badge">Credentials</span>
@@ -924,139 +1000,125 @@
             </div>
 
             <div class="certs-grid">
-                <!-- CISM -->
                 <div class="cert-card" onclick="openCert('CISM')">
                     <div class="cert-badge-icon badge-isaca">🏅</div>
                     <div class="cert-info">
                         <h4>CISM</h4>
                         <span>ISACA</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- CEH -->
                 <div class="cert-card" onclick="openCert('CEH')">
                     <div class="cert-badge-icon badge-ec">⚔️</div>
                     <div class="cert-info">
                         <h4>CEH (Certified Ethical Hacker)</h4>
                         <span>EC-Council</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- CompTIA SecurityX -->
                 <div class="cert-card" onclick="openCert('SecurityX')">
                     <div class="cert-badge-icon badge-comptia">🛡️</div>
                     <div class="cert-info">
                         <h4>CompTIA SecurityX</h4>
                         <span>CompTIA (CASP+)</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- CompTIA PenTest+ -->
                 <div class="cert-card" onclick="openCert('PenTest+')">
                     <div class="cert-badge-icon badge-comptia">🎯</div>
                     <div class="cert-info">
                         <h4>CompTIA PenTest+</h4>
                         <span>CompTIA</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- CompTIA CySA+ -->
                 <div class="cert-card" onclick="openCert('CySA+')">
                     <div class="cert-badge-icon badge-comptia">📊</div>
                     <div class="cert-info">
                         <h4>CompTIA CySA+</h4>
                         <span>CompTIA</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- CompTIA Security+ -->
                 <div class="cert-card" onclick="openCert('Security+')">
                     <div class="cert-badge-icon badge-comptia">🔒</div>
                     <div class="cert-info">
                         <h4>CompTIA Security+</h4>
                         <span>CompTIA</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- AWS Solutions Architect -->
                 <div class="cert-card" onclick="openCert('AWS')">
                     <div class="cert-badge-icon badge-aws">☁️</div>
                     <div class="cert-info">
                         <h4>AWS Solutions Architect</h4>
                         <span>Amazon Web Services</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- Azure Admin -->
                 <div class="cert-card" onclick="openCert('Azure')">
                     <div class="cert-badge-icon badge-azure">🔷</div>
                     <div class="cert-info">
                         <h4>Azure Administrator</h4>
                         <span>Microsoft (AZ-104)</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- LPIC-1 -->
                 <div class="cert-card" onclick="openCert('LPIC')">
                     <div class="cert-badge-icon badge-linux">🐧</div>
                     <div class="cert-info">
                         <h4>LPIC-1 Linux</h4>
                         <span>Linux Professional Inst.</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- CompTIA Network+ -->
                 <div class="cert-card" onclick="openCert('Network+')">
                     <div class="cert-badge-icon badge-comptia">🌐</div>
                     <div class="cert-info">
                         <h4>CompTIA Network+</h4>
                         <span>CompTIA</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- CompTIA A+ -->
                 <div class="cert-card" onclick="openCert('A+')">
                     <div class="cert-badge-icon badge-comptia">💻</div>
                     <div class="cert-info">
                         <h4>CompTIA A+</h4>
                         <span>CompTIA</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- CompTIA Data+ -->
                 <div class="cert-card" onclick="openCert('Data+')">
                     <div class="cert-badge-icon badge-comptia">📈</div>
                     <div class="cert-info">
                         <h4>CompTIA Data+</h4>
                         <span>CompTIA</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
 
-                <!-- ITIL 4 -->
                 <div class="cert-card" onclick="openCert('ITIL')">
                     <div class="cert-badge-icon badge-itil">⚙️</div>
                     <div class="cert-info">
                         <h4>ITIL 4 Service Mgmt</h4>
                         <span>Axelos / PeopleCert</span>
                     </div>
-                    <span class="inspect-tag">Details &rarr;</span>
+                    <span class="inspect-tag">Details →</span>
                 </div>
             </div>
         </section>
 
-        <!-- ================= COMPETENCIES ================= -->
         <section id="skills">
             <div class="sec-header">
                 <span class="cyber-badge">Core Domains</span>
@@ -1069,27 +1131,22 @@
                     <h3>🛡️ Security Operations</h3>
                     <p>Incident Response, Threat Hunting, IOC Analysis, EDR, Email Security, Phishing Investigation, Vulnerability Management, Security Monitoring, NIST, DISA STIG.</p>
                 </div>
-
                 <div class="skill-box">
                     <h3>⚔️ Offensive Security</h3>
                     <p>Network & Web Penetration Testing, Active Directory Assessments, Vulnerability Exploitation, Adversary Simulation, Red Team Operations, Privilege Escalation.</p>
                 </div>
-
                 <div class="skill-box">
                     <h3>🔍 Digital Forensics</h3>
                     <p>Autopsy, FTK, Disk Images, Browser/Outlook Artifacts, Windows Prefetch, Persistence Analysis, SHA-256 Hashing, Timeline Reconstruction.</p>
                 </div>
-
                 <div class="skill-box">
                     <h3>☁️ Microsoft & Cloud</h3>
                     <p>Microsoft 365, Entra ID, Active Directory, Group Policy, Microsoft Defender, Windows Server, Azure, AWS.</p>
                 </div>
-
                 <div class="skill-box">
                     <h3>🧰 Security Tooling</h3>
                     <p>Nessus, Splunk, Wazuh, Wireshark, Burp Suite, Metasploit, Cobalt Strike, Sliver, Mythic.</p>
                 </div>
-
                 <div class="skill-box">
                     <h3>🌐 Networking Infrastructure</h3>
                     <p>TCP/IP, DNS, DHCP, VPN, Ethernet, switching, routing, Wi-Fi, network troubleshooting, backup and recovery.</p>
@@ -1097,7 +1154,6 @@
             </div>
         </section>
 
-        <!-- ================= EXPERIENCE ================= -->
         <section id="experience">
             <div class="sec-header">
                 <span class="cyber-badge">Milestones</span>
@@ -1156,7 +1212,6 @@
             </div>
         </section>
 
-        <!-- ================= CONTACT ================= -->
         <section id="contact">
             <div class="sec-header">
                 <span class="cyber-badge">Direct Line</span>
@@ -1170,19 +1225,16 @@
                     <small>Email</small>
                     <b>Jaouad@usa.com</b>
                 </a>
-
                 <a class="contact-card" href="tel:+15712459013">
                     <div class="c-icon">📱</div>
                     <small>Phone</small>
                     <b>571-245-9013</b>
                 </a>
-
                 <div class="contact-card">
                     <div class="c-icon">📍</div>
                     <small>Location</small>
                     <b>Brambleton, VA 20148</b>
                 </div>
-
                 <div class="contact-card">
                     <div class="c-icon">🔐</div>
                     <small>Clearance</small>
@@ -1192,7 +1244,6 @@
         </section>
     </main>
 
-    <!-- Certificate Popup Modal -->
     <div class="modal-backdrop" id="certModal" onclick="closeCertOnBackdrop(event)">
         <div class="modal-box">
             <button class="modal-close" onclick="closeCert()">&times;</button>
@@ -1212,7 +1263,6 @@
         <p>&copy; <span id="year"></span> Jaouad El Ghouzi &bull; Cybersecurity Engineer &bull; Penetration Tester &bull; Systems Administrator</p>
     </footer>
 
-    <!-- Google Translate Script -->
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
@@ -1225,11 +1275,9 @@
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-    <!-- Dynamic Cyber Matrix Canvas & Interactive Features Script -->
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        /* ---------- 1. CYBER BACKGROUND CANVAS ---------- */
         const canvas = document.getElementById('cyber-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, particles;
@@ -1239,7 +1287,6 @@
             height = canvas.height = window.innerHeight;
             particles = [];
             const count = Math.floor(width * height / 14000);
-
             for (let i = 0; i < count; i++) {
                 particles.push({
                     x: Math.random() * width,
@@ -1252,28 +1299,18 @@
             }
         }
 
-        let mouse = { x: null, y: null };
-        window.addEventListener('mousemove', e => {
-            mouse.x = e.x;
-            mouse.y = e.y;
-        });
-
         function animateCanvas() {
             ctx.clearRect(0, 0, width, height);
-
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
                 p.x += p.vx;
                 p.y += p.vy;
-
                 if (p.x < 0 || p.x > width) p.vx *= -1;
                 if (p.y < 0 || p.y > height) p.vy *= -1;
-
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(0, 242, 254, ${p.alpha})`;
                 ctx.fill();
-
                 for (let j = i + 1; j < particles.length; j++) {
                     const p2 = particles[j];
                     const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
@@ -1294,99 +1331,20 @@
         initCanvas();
         animateCanvas();
 
-        /* ---------- 2. CERTIFICATION DETAILS DATA & POPUP ---------- */
         const certData = {
-            'CISM': {
-                title: 'CISM (Certified Information Security Manager)',
-                issuer: 'ISACA',
-                icon: '🏅',
-                desc: 'Validates advanced expertise in information security governance, program development, security incident management, and enterprise risk management frameworks.',
-                skills: ['Governance', 'Risk Assessment', 'Incident Management', 'Compliance']
-            },
-            'CEH': {
-                title: 'Certified Ethical Hacker (CEH)',
-                issuer: 'EC-Council',
-                icon: '⚔️',
-                desc: 'Demonstrates offensive cybersecurity capability, network footprinting, vulnerability exploitation, malware analysis, privilege escalation, and evasion techniques.',
-                skills: ['Exploitation', 'Metasploit', 'Burp Suite', 'Network Sniffing']
-            },
-            'SecurityX': {
-                title: 'CompTIA SecurityX (CASP+)',
-                issuer: 'CompTIA',
-                icon: '🛡️',
-                desc: 'Advanced practitioner certification covering enterprise security architecture, security operations, research, collaboration, and integrating cloud and on-premises security.',
-                skills: ['Enterprise Architecture', 'Zero Trust', 'Threat Modeling', 'Crypto Hardening']
-            },
-            'PenTest+': {
-                title: 'CompTIA PenTest+',
-                issuer: 'CompTIA',
-                icon: '🎯',
-                desc: 'Focuses on end-to-end vulnerability assessment and penetration testing across web apps, networks, and cloud, including attack simulation and remediation reports.',
-                skills: ['Vulnerability Scanning', 'Adversary Simulation', 'Post-Exploitation', 'Nessus']
-            },
-            'CySA+': {
-                title: 'CompTIA CySA+ (Cybersecurity Analyst)',
-                issuer: 'CompTIA',
-                icon: '📊',
-                desc: 'Validates ability to apply behavioral analytics to networks and devices to prevent, detect, and combat cybersecurity threats through continuous security monitoring.',
-                skills: ['SOC Analysis', 'Threat Hunting', 'SIEM / Splunk', 'IOC Correlation']
-            },
-            'Security+': {
-                title: 'CompTIA Security+',
-                issuer: 'CompTIA',
-                icon: '🔒',
-                desc: 'Foundational baseline certification covering core principles of network security, threat management, identity access management, cryptography, and operational compliance.',
-                skills: ['Identity & Access', 'PKI', 'Firewalls', 'Security Policies']
-            },
-            'AWS': {
-                title: 'AWS Certified Solutions Architect – Associate',
-                issuer: 'Amazon Web Services',
-                icon: '☁️',
-                desc: 'Validates knowledge in designing cost-efficient, secure, fault-tolerant, and scalable distributed architectures on AWS cloud infrastructure.',
-                skills: ['VPC Architecture', 'IAM Security', 'S3 & EC2 Hardening', 'CloudWatch']
-            },
-            'Azure': {
-                title: 'Azure Administrator Associate (AZ-104)',
-                issuer: 'Microsoft',
-                icon: '🔷',
-                desc: 'Validates skills in implementing, managing, and monitoring identity, governance, storage, compute, and virtual networks in Microsoft Azure environments.',
-                skills: ['Entra ID', 'Azure Policy', 'Virtual Networks', 'Role-Based Access Control']
-            },
-            'LPIC': {
-                title: 'LPIC-1 Linux Professional',
-                issuer: 'Linux Professional Institute',
-                icon: '🐧',
-                desc: 'Validates mastery of the Linux command line, system architecture, package management, process handling, filesystems, and core networking daemon management.',
-                skills: ['Bash Scripting', 'Systemd', 'Filesystem Permissions', 'Network Daemons']
-            },
-            'Network+': {
-                title: 'CompTIA Network+',
-                issuer: 'CompTIA',
-                icon: '🌐',
-                desc: 'Validates technical understanding of network architectures, cabling standards, routing, switching, subnetting, DNS/DHCP, and enterprise infrastructure troubleshooting.',
-                skills: ['Routing & Switching', 'Subnetting', 'TCP/IP Model', 'Network Troubleshooting']
-            },
-            'A+': {
-                title: 'CompTIA A+',
-                issuer: 'CompTIA',
-                icon: '💻',
-                desc: 'Covers fundamental hardware, operating system installation, device configuration, peripherals, endpoint diagnostics, and IT operational procedures.',
-                skills: ['Hardware Diagnostics', 'Endpoint Support', 'OS Troubleshooting', 'Disaster Recovery']
-            },
-            'Data+': {
-                title: 'CompTIA Data+',
-                issuer: 'CompTIA',
-                icon: '📈',
-                desc: 'Validates data analytics expertise, data governance, quality analysis, schema architectures, data mining, and translating complex metrics into actionable insights.',
-                skills: ['Data Mining', 'Governance', 'Security Metrics', 'Visualization']
-            },
-            'ITIL': {
-                title: 'ITIL 4 – IT Service Management',
-                issuer: 'Axelos / PeopleCert',
-                icon: '⚙️',
-                desc: 'Validates understanding of the ITIL service management framework, guiding principles, value streams, incident management workflows, and continuous improvement.',
-                skills: ['ITSM Frameworks', 'Change Enablement', 'Incident Lifecycle', 'SLA Management']
-            }
+            'CISM': { title: 'CISM (Certified Information Security Manager)', issuer: 'ISACA', icon: '🏅', desc: 'Validates advanced expertise in information security governance, program development, security incident management, and enterprise risk management frameworks.', skills: ['Governance', 'Risk Assessment', 'Incident Management', 'Compliance'] },
+            'CEH': { title: 'Certified Ethical Hacker (CEH)', issuer: 'EC-Council', icon: '⚔️', desc: 'Demonstrates offensive cybersecurity capability, network footprinting, vulnerability exploitation, malware analysis, privilege escalation, and evasion techniques.', skills: ['Exploitation', 'Metasploit', 'Burp Suite', 'Network Sniffing'] },
+            'SecurityX': { title: 'CompTIA SecurityX (CASP+)', issuer: 'CompTIA', icon: '🛡️', desc: 'Advanced practitioner certification covering enterprise security architecture, security operations, research, collaboration, and integrating cloud and on-premises security.', skills: ['Enterprise Architecture', 'Zero Trust', 'Threat Modeling', 'Crypto Hardening'] },
+            'PenTest+': { title: 'CompTIA PenTest+', issuer: 'CompTIA', icon: '🎯', desc: 'Focuses on end-to-end vulnerability assessment and penetration testing across web apps, networks, and cloud, including attack simulation and remediation reports.', skills: ['Vulnerability Scanning', 'Adversary Simulation', 'Post-Exploitation', 'Nessus'] },
+            'CySA+': { title: 'CompTIA CySA+ (Cybersecurity Analyst)', issuer: 'CompTIA', icon: '📊', desc: 'Validates ability to apply behavioral analytics to networks and devices to prevent, detect, and combat cybersecurity threats through continuous security monitoring.', skills: ['SOC Analysis', 'Threat Hunting', 'SIEM / Splunk', 'IOC Correlation'] },
+            'Security+': { title: 'CompTIA Security+', issuer: 'CompTIA', icon: '🔒', desc: 'Foundational baseline certification covering core principles of network security, threat management, identity access management, cryptography, and operational compliance.', skills: ['Identity & Access', 'PKI', 'Firewalls', 'Security Policies'] },
+            'AWS': { title: 'AWS Certified Solutions Architect – Associate', issuer: 'Amazon Web Services', icon: '☁️', desc: 'Validates knowledge in designing cost-efficient, secure, fault-tolerant, and scalable distributed architectures on AWS cloud infrastructure.', skills: ['VPC Architecture', 'IAM Security', 'S3 & EC2 Hardening', 'CloudWatch'] },
+            'Azure': { title: 'Azure Administrator Associate (AZ-104)', issuer: 'Microsoft', icon: '🔷', desc: 'Validates skills in implementing, managing, and monitoring identity, governance, storage, compute, and virtual networks in Microsoft Azure environments.', skills: ['Entra ID', 'Azure Policy', 'Virtual Networks', 'Role-Based Access Control'] },
+            'LPIC': { title: 'LPIC-1 Linux Professional', issuer: 'Linux Professional Institute', icon: '🐧', desc: 'Validates mastery of the Linux command line, system architecture, package management, process handling, filesystems, and core networking daemon management.', skills: ['Bash Scripting', 'Systemd', 'Filesystem Permissions', 'Network Daemons'] },
+            'Network+': { title: 'CompTIA Network+', issuer: 'CompTIA', icon: '🌐', desc: 'Validates technical understanding of network architectures, cabling standards, routing, switching, subnetting, DNS/DHCP, and enterprise infrastructure troubleshooting.', skills: ['Routing & Switching', 'Subnetting', 'TCP/IP Model', 'Network Troubleshooting'] },
+            'A+': { title: 'CompTIA A+', issuer: 'CompTIA', icon: '💻', desc: 'Covers fundamental hardware, operating system installation, device configuration, peripherals, endpoint diagnostics, and IT operational procedures.', skills: ['Hardware Diagnostics', 'Endpoint Support', 'OS Troubleshooting', 'Disaster Recovery'] },
+            'Data+': { title: 'CompTIA Data+', issuer: 'CompTIA', icon: '📈', desc: 'Validates data analytics expertise, data governance, quality analysis, schema architectures, data mining, and translating complex metrics into actionable insights.', skills: ['Data Mining', 'Governance', 'Security Metrics', 'Visualization'] },
+            'ITIL': { title: 'ITIL 4 – IT Service Management', issuer: 'Axelos / PeopleCert', icon: '⚙️', desc: 'Validates understanding of the ITIL service management framework, guiding principles, value streams, incident management workflows, and continuous improvement.', skills: ['ITSM Frameworks', 'Change Enablement', 'Incident Lifecycle', 'SLA Management'] }
         };
 
         const modal = document.getElementById('certModal');
@@ -1397,7 +1355,6 @@
             document.getElementById('mTitle').textContent = data.title;
             document.getElementById('mIssuer').textContent = data.issuer;
             document.getElementById('mDesc').textContent = data.desc;
-
             const skillsEl = document.getElementById('mSkills');
             skillsEl.innerHTML = '';
             data.skills.forEach(skill => {
@@ -1408,16 +1365,9 @@
             });
             modal.classList.add('active');
         }
+        function closeCert() { modal.classList.remove('active'); }
+        function closeCertOnBackdrop(e) { if (e.target === modal) closeCert(); }
 
-        function closeCert() {
-            modal.classList.remove('active');
-        }
-
-        function closeCertOnBackdrop(e) {
-            if (e.target === modal) closeCert();
-        }
-
-        /* ---------- 3. LIGHT / DARK THEME TOGGLE ---------- */
         const themeBtn = document.getElementById('themeToggle');
         themeBtn.addEventListener('click', () => {
             const current = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -1425,10 +1375,7 @@
             document.documentElement.setAttribute('data-theme', target);
             localStorage.setItem('portfolio_theme', target);
         });
-
-        const savedTheme = localStorage.getItem('portfolio_theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('portfolio_theme') || 'dark');
     </script>
-
 </body>
 </html>
