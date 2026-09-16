@@ -80,7 +80,7 @@
             flex-wrap: wrap;
         }
 
-        /* Download PDF button */
+        /* DOWNLOAD PDF BUTTON */
         .download-pdf {
             display: inline-flex;
             align-items: center;
@@ -128,6 +128,7 @@
             }
         }
 
+        /* THEME BUTTON */
         .theme-toggle {
             border: none;
             border-radius: 12px;
@@ -149,7 +150,7 @@
             opacity: 0.9;
         }
 
-        /* Translation controls */
+        /* TRANSLATION CONTROLS */
         .translate-widget {
             display: flex;
             align-items: center;
@@ -263,7 +264,7 @@
             transform: translateY(-1px);
         }
 
-        /* Hide Google Translate banner / tooltip */
+        /* HIDE GOOGLE TRANSLATE BANNER / TOOLTIP */
         .goog-te-banner-frame,
         .goog-te-banner-frame.skiptranslate,
         .VIpgJd-ZVi9od-ORHb-OEVmcd,
@@ -278,6 +279,7 @@
             box-shadow: none !important;
         }
 
+        /* RESUME CARDS */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -517,7 +519,7 @@
             font-weight: 700;
         }
 
-        /* Responsive layout */
+        /* RESPONSIVE WEBPAGE */
         @media screen and (max-width: 800px) {
             .container {
                 grid-template-columns: 1fr;
@@ -584,37 +586,43 @@
             }
         }
 
-        /* Print / PDF layout */
+        /*
+         * TWO-PAGE PRINT / PDF LAYOUT
+         * Verified for the English resume on Letter paper at 100% scale
+         * with browser headers and footers disabled.
+         */
         @media print {
-            /* Print a light palette without changing the saved screen theme. */
+            @page {
+                size: letter portrait;
+                margin: 0.35in 0.4in;
+            }
+
             :root,
             [data-theme="dark"] {
                 --bg-color: #ffffff;
                 --card-bg: #ffffff;
-                --text-main: #000000;
-                --text-muted: #333333;
+                --text-main: #172033;
+                --text-muted: #334155;
                 --accent-primary: #3730a3;
                 --accent-secondary: #0e7490;
                 --accent-tertiary: #be123c;
-                --border-color: #cccccc;
+                --border-color: #cbd5e1;
                 --shadow: none;
             }
 
             *,
             *::before,
             *::after {
-                transition: none !important;
                 animation: none !important;
-            }
-
-            @page {
-                margin: 0.45in;
+                transition: none !important;
             }
 
             body {
+                margin: 0;
                 padding: 0;
-                color: #000000;
-                background: #ffffff;
+                background: white;
+                font-size: 9pt;
+                line-height: 1.24;
             }
 
             .container {
@@ -625,82 +633,197 @@
             }
 
             .top-bar,
+            .profile-photo-wrap,
+            .profile-photo,
+            .pdf-preview-tools,
             .download-pdf,
-            .theme-toggle,
             .translate-widget,
             #google_translate_element {
                 display: none !important;
             }
 
+            aside {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 7pt;
+                margin-bottom: 7pt;
+            }
+
             .card {
-                margin-bottom: 0.75rem;
-                padding: 0.85rem;
-                border: 1px solid #cccccc;
+                padding: 7pt;
+                margin: 0 0 7pt;
+                border: 1px solid #cbd5e1;
                 border-radius: 0;
                 box-shadow: none;
-                page-break-inside: auto;
-                break-inside: auto;
-            }
-
-            h1,
-            h3,
-            .section-heading,
-            .company-location,
-            .date-badge {
-                break-after: avoid;
-            }
-
-            li,
-            .contact-item,
-            .competency-block,
-            .skill-category {
                 break-inside: avoid;
             }
 
-            p,
-            li {
-                orphans: 3;
-                widows: 3;
+            aside .card {
+                margin: 0;
             }
 
             .card:hover {
                 transform: none;
             }
 
-            .profile-photo-wrap {
-                width: 115px;
-                height: 115px;
-                background: #cccccc;
-                box-shadow: none;
+            h1 {
+                font-size: 16pt;
+                margin-bottom: 4pt;
             }
 
-            .profile-photo {
-                border-color: #ffffff;
-            }
-
-            h1,
-            h3,
-            .contact-value,
-            .competency-title,
-            .clean-list li {
-                color: #000000;
+            h3 {
+                font-size: 10pt;
+                line-height: 1.2;
+                margin-bottom: 2pt;
             }
 
             p,
             li,
+            .clean-list li,
+            .contact-value,
+            .competency-title,
+            .company-location,
+            .skill-category strong {
+                font-size: 9pt;
+            }
+
+            p {
+                margin-bottom: 4pt;
+            }
+
+            .section-heading {
+                font-size: 9pt;
+                letter-spacing: 0.6pt;
+                padding-bottom: 3pt;
+                margin-bottom: 5pt;
+            }
+
+            .role-title {
+                font-size: 8pt;
+                line-height: 1.2;
+                margin-top: 3pt;
+                letter-spacing: 0;
+            }
+
+            .status-badge {
+                font-size: 8pt;
+                padding: 3pt;
+                margin-top: 4pt;
+            }
+
+            .contact-info {
+                margin-top: 6pt;
+            }
+
+            .contact-item {
+                margin-bottom: 4pt;
+            }
+
+            .contact-label {
+                font-size: 7pt;
+                letter-spacing: 0.3pt;
+            }
+
+            .contact-value {
+                font-size: 8pt;
+            }
+
+            .clean-list li {
+                margin-bottom: 3pt;
+                padding-left: 4pt;
+                border-left-width: 2px;
+            }
+
+            .competency-block {
+                margin-bottom: 5pt;
+            }
+
+            .competency-title {
+                margin-bottom: 2pt;
+            }
+
+            .language-tags {
+                gap: 3pt;
+            }
+
+            .tag {
+                padding: 2pt 4pt;
+                font-size: 8pt;
+            }
+
+            main > .card:nth-child(2) {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0 10pt;
+            }
+
+            main > .card:nth-child(2) > .section-heading {
+                grid-column: 1 / -1;
+            }
+
+            main > .card:nth-child(3) {
+                break-before: page;
+                page-break-before: always;
+            }
+
+            .job-block {
+                margin-bottom: 4pt;
+            }
+
+            .company-location {
+                margin-bottom: 2pt;
+            }
+
             .date-badge {
-                color: #333333;
+                font-size: 8pt;
+                padding: 1pt 3pt;
+                margin-bottom: 2pt;
+            }
+
+            .bullet-list {
+                margin-top: 3pt;
+                padding-left: 12pt;
+            }
+
+            .bullet-list li {
+                margin-bottom: 1pt;
+                font-size: 8pt;
+                line-height: 1.12;
             }
 
             .skills-grid {
-                grid-template-columns: 1fr 1fr;
+                display: block;
             }
 
-            .skill-category,
-            .status-badge,
-            .date-badge,
-            .tag {
-                background: #f5f5f5;
+            .skill-category {
+                padding: 2pt 0;
+                border-radius: 0;
+                font-size: 8pt;
+                line-height: 1.15;
+            }
+
+            .skill-category strong {
+                display: inline;
+                margin-right: 4pt;
+                font-size: 8pt;
+            }
+
+            h1,
+            h3,
+            .section-heading {
+                break-after: avoid;
+            }
+
+            li,
+            .contact-item,
+            .competency-block {
+                break-inside: avoid;
+            }
+
+            p,
+            li {
+                orphans: 2;
+                widows: 2;
             }
         }
     </style>
@@ -720,7 +843,7 @@
                 class="download-pdf notranslate"
                 translate="no"
                 onclick="downloadPDF()"
-                title="Open the print dialog, then choose Save as PDF"
+                title="Open a separate two-page PDF view, then choose Save as PDF"
             >
                 <svg
                     width="22"
@@ -812,14 +935,18 @@
                 <!-- CONTACT INFORMATION -->
                 <div class="contact-info">
                     <div class="contact-item">
-                        <span class="contact-label">Location</span>
+                        <span class="contact-label">
+                            Location
+                        </span>
                         <span class="contact-value">
                             Brambleton, VA 20148
                         </span>
                     </div>
 
                     <div class="contact-item">
-                        <span class="contact-label">Phone</span>
+                        <span class="contact-label">
+                            Phone
+                        </span>
                         <span class="contact-value">
                             <a href="tel:+15712459013">
                                 571-245-9013
@@ -828,7 +955,9 @@
                     </div>
 
                     <div class="contact-item">
-                        <span class="contact-label">Email</span>
+                        <span class="contact-label">
+                            Email
+                        </span>
                         <span class="contact-value">
                             <a href="mailto:Jaouad@usa.com">
                                 Jaouad@usa.com
@@ -837,7 +966,9 @@
                     </div>
 
                     <div class="contact-item">
-                        <span class="contact-label">LinkedIn</span>
+                        <span class="contact-label">
+                            LinkedIn
+                        </span>
                         <span class="contact-value">
                             <a
                                 href="https://www.linkedin.com/in/jaouad-el-ghouzi/"
@@ -1184,7 +1315,9 @@
 
                 <!-- NOVA -->
                 <article class="job-block">
-                    <h3>Systems Administrator</h3>
+                    <h3>
+                        Systems Administrator
+                    </h3>
 
                     <div class="company-location">
                         Nova Marketing Inc — Manassas, VA
@@ -1284,7 +1417,9 @@
 
                 <!-- WCC -->
                 <article class="job-block">
-                    <h3>Cable Technician</h3>
+                    <h3>
+                        Cable Technician
+                    </h3>
 
                     <div class="company-location">
                         WCC-Cable — COX Communications Contractor —
@@ -1328,7 +1463,9 @@
 
                 <div class="skills-grid">
                     <div class="skill-category">
-                        <strong>Security</strong>
+                        <strong>
+                            Security
+                        </strong>
                         <span>
                             Microsoft Defender,
                             Nessus,
@@ -1345,7 +1482,9 @@
                     </div>
 
                     <div class="skill-category">
-                        <strong>Offensive Security</strong>
+                        <strong>
+                            Offensive Security
+                        </strong>
                         <span>
                             Burp Suite,
                             Metasploit,
@@ -1360,7 +1499,9 @@
                     </div>
 
                     <div class="skill-category">
-                        <strong>Forensics</strong>
+                        <strong>
+                            Forensics
+                        </strong>
                         <span>
                             Autopsy,
                             FTK,
@@ -1374,7 +1515,9 @@
                     </div>
 
                     <div class="skill-category">
-                        <strong>Platforms</strong>
+                        <strong>
+                            Platforms
+                        </strong>
                         <span>
                             Microsoft 365,
                             Entra ID,
@@ -1390,7 +1533,9 @@
                     </div>
 
                     <div class="skill-category">
-                        <strong>Networking</strong>
+                        <strong>
+                            Networking
+                        </strong>
                         <span>
                             TCP/IP,
                             DNS,
@@ -1410,15 +1555,99 @@
     </div>
 
     <script>
-        // Print the current language using the print stylesheet above.
-        // The browser lets the visitor choose Save as PDF and a filename.
+        /*
+         * DOWNLOAD PDF
+         * Opens a separate print tab containing the currently displayed
+         * resume language, without the profile picture or top controls.
+         */
         function downloadPDF() {
-            window.print();
+            const printWindow = window.open("", "_blank");
+
+            if (!printWindow) {
+                alert(
+                    "Please allow pop-ups for this resume, " +
+                    "then click Download PDF again."
+                );
+                return;
+            }
+
+            const printPage = document.documentElement.cloneNode(true);
+            printPage.setAttribute("data-theme", "light");
+
+            printPage.querySelectorAll(
+                "script, iframe, .top-bar, .profile-photo-wrap, #goog-gt-tt"
+            ).forEach(element => element.remove());
+
+            // Show the print layout in the new tab as well as in the PDF.
+            printPage.querySelectorAll("style").forEach(style => {
+                style.textContent = style.textContent.replace(
+                    "@media print {",
+                    "@media all {"
+                );
+            });
+
+            const previewStyle = document.createElement("style");
+
+            previewStyle.textContent = `
+                @media screen {
+                    body {
+                        max-width: 7.7in;
+                        margin: 24px auto;
+                        padding: 16px;
+                    }
+
+                    .pdf-preview-tools {
+                        display: flex !important;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 16px;
+                        margin-bottom: 20px;
+                        padding: 12px;
+                        background: #eef2ff;
+                        font: 14px/1.4 Arial, sans-serif;
+                    }
+
+                    .pdf-preview-tools button {
+                        padding: 10px 16px;
+                        border: 0;
+                        border-radius: 8px;
+                        background: #4338ca;
+                        color: white;
+                        font: bold 14px Arial, sans-serif;
+                        cursor: pointer;
+                    }
+                }
+            `;
+
+            printPage.querySelector("head").appendChild(previewStyle);
+
+            const toolbar = document.createElement("div");
+            toolbar.className = "pdf-preview-tools notranslate";
+
+            toolbar.innerHTML =
+                '<span>PDF view · 2 pages<br>' +
+                'Choose Save as PDF, Letter paper, 100% scale, ' +
+                'and turn off headers and footers.</span>' +
+                '<button type="button" onclick="window.print()">' +
+                'Save as PDF</button>';
+
+            printPage.querySelector("body").prepend(toolbar);
+
+            printWindow.document.open();
+            printWindow.document.write(
+                "<!DOCTYPE html>" + printPage.outerHTML
+            );
+            printWindow.document.close();
+            printWindow.focus();
+
+            printWindow.setTimeout(() => {
+                printWindow.print();
+            }, 350);
         }
 
+        /* LIGHT / DARK THEME */
         const htmlElement = document.documentElement;
 
-        /* LIGHT / DARK THEME */
         function toggleTheme() {
             const currentTheme =
                 htmlElement.getAttribute("data-theme") || "light";
@@ -1442,12 +1671,6 @@
         }
 
         /* GOOGLE TRANSLATE */
-
-        /*
-         * No includedLanguages option is set.
-         * Google Translate therefore displays all languages supported
-         * by its website translation service.
-         */
         window.googleTranslateElementInit = function () {
             const translateContainer =
                 document.getElementById("google_translate_element");
