@@ -65,30 +65,32 @@
             gap: 0.45rem;
         }
 
-        /* Keep all header actions aligned in one row when space allows. */
+        /* Keep the résumé name on the left and the controls in one group. */
         .top-bar-controls {
-            display: contents;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            min-width: 0;
         }
 
         .top-bar > .site-label {
-            margin-right: 0.35rem;
             white-space: nowrap;
         }
 
-        @media screen and (min-width: 900px) {
+        @media screen and (min-width: 1200px) {
             .top-bar {
-                width: min(1600px, calc(100vw - 40px));
+                width: calc(100vw - 100px);
+                max-width: none;
                 margin-left: 50%;
                 transform: translateX(-50%);
-                justify-content: flex-start;
-                flex-wrap: nowrap;
-                gap: 0.55rem;
+                display: grid;
+                grid-template-columns: 28% minmax(0, 1fr);
+                justify-content: initial;
+                flex-wrap: initial;
+                gap: 0;
             }
 
-            .top-bar > .site-label { flex: 0 1 auto; }
-            .top-bar > .download-pdf,
-            .top-bar > .top-bar-controls > .translate-widget,
-            .top-bar > .top-bar-controls > .theme-toggle { flex: 0 0 auto; }
+            .top-bar-controls { gap: 0.55rem; flex-wrap: nowrap; }
             .top-bar .download-pdf { min-height: 68px; padding: 0.85rem 1.2rem; font-size: 1.08rem; }
             .top-bar .translate-widget { min-height: 68px; gap: 0.4rem; padding: 0.55rem 0.65rem; }
             .top-bar #google_translate_element { min-width: 150px; }
@@ -105,18 +107,6 @@
             color: var(--text-muted);
             letter-spacing: 0.8px;
             text-transform: uppercase;
-        }
-
-        .top-bar-controls {
-            display: contents;
-        }
-
-        @media screen and (min-width: 900px) and (max-width: 1350px) {
-            .top-bar .translate-title { display: none; }
-        }
-
-        @media screen and (min-width: 900px) and (max-width: 1150px) {
-            .top-bar > .site-label { display: none; }
         }
 
         /* DOWNLOAD PDF BUTTON */
@@ -581,7 +571,10 @@
             }
 
             .top-bar-controls {
-                display: contents;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: stretch;
+                width: 100%;
             }
 
             .translate-widget {
@@ -883,6 +876,7 @@
                 Cybersecurity Resume
             </div>
 
+            <div class="top-bar-controls">
             <button
                 type="button"
                 class="download-pdf notranslate"
@@ -912,7 +906,6 @@
                 <span>My certificates</span>
             </a>
 
-            <div class="top-bar-controls">
                 <div
                     class="translate-widget"
                     title="Translate this resume"
