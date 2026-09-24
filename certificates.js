@@ -12,22 +12,6 @@
   };
   let sequence = 0, task = null, pdf = null, pageNumber = 1, busy = false;
   let pdfLibrary;
-  let activeCertificate = -1;
-  const browsableCertificates = [];
-  function updateCertificateNavigation() {
-    $('previous-certificate').disabled = activeCertificate <= 0;
-    $('next-certificate').disabled = activeCertificate < 0 || activeCertificate >= browsableCertificates.length - 1;
-    $('certificate-position').textContent = `Document ${activeCertificate + 1} of ${browsableCertificates.length}`;
-  }
-  function showCertificate(index) {
-    if (index < 0 || index >= browsableCertificates.length) return;
-    activeCertificate = index;
-    updateCertificateNavigation();
-    const entry = browsableCertificates[index];
-    openDocument(entry.item, entry.url, entry.extension);
-  }
-  $('previous-certificate').onclick = () => showCertificate(activeCertificate - 1);
-  $('next-certificate').onclick = () => showCertificate(activeCertificate + 1);
   // Pinned PDF.js module and matching worker; loaded only when a PDF is opened.
   async function getPdfLibrary() {
     if (!pdfLibrary) {
@@ -87,10 +71,8 @@
     cleanup(); const token = sequence;
     $('viewer-title').textContent = item.title;
     $('status').textContent = 'Loading document…';
-    if (!$('viewer').open) {
-      $('viewer').showModal();
-      $('close').focus();
-    }
+    $('viewer').showModal();
+    $('close').focus();
     try {
       if (extension === 'pdf') {
         const lib = await getPdfLibrary();
@@ -122,29 +104,18 @@
   const entries = Array.isArray(window.CERTIFICATES) ? window.CERTIFICATES : [];
   let count = 0;
   for (const item of entries) {
-    if (!item || typeof item.title !== 'string') continue;
-    if (item.soon) {
-      const card = document.createElement('article'); card.className = 'card';
-      const type = document.createElement('span'); type.className = 'tag'; type.textContent = item.category || 'Certificate';
-      const title = document.createElement('h2'); title.textContent = item.title;
-      const status = document.createElement('span'); status.className = 'soon'; status.textContent = 'Soon';
-      card.append(type, title, status); $('grid').append(card); count++;
-      continue;
-    }
-    if (typeof item.file !== 'string') continue;
+    if (!item || typeof item.title !== 'string' || typeof item.file !== 'string') continue;
     let url;
     try { url = new URL(item.file, document.baseURI); } catch { continue; }
     const extension = url.pathname.split('.').pop().toLowerCase();
     if (!['http:', 'https:'].includes(url.protocol) || !['pdf','jpg','jpeg','png'].includes(extension)) continue;
     const card = document.createElement('article'); card.className = 'card';
     const type = document.createElement('span'); type.className = 'tag';
-    type.textContent = item.category || 'Certificate';
+    type.textContent = `${item.category || 'Certificate'} · ${extension.toUpperCase()}`;
     const title = document.createElement('h2'); title.textContent = item.title;
     const button = document.createElement('button'); button.type = 'button'; button.className = 'view';
     button.textContent = 'View document'; button.setAttribute('aria-label', `View ${item.title}`);
-    const certificateIndex = browsableCertificates.length;
-    browsableCertificates.push({ item, url, extension });
-    button.onclick = () => showCertificate(certificateIndex);
+    button.onclick = () => openDocument(item, url, extension);
     card.append(type, title, button); $('grid').append(card); count++;
   }
   if (!count) {
