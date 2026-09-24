@@ -75,10 +75,9 @@
             white-space: nowrap;
         }
 
-        @media screen and (min-width: 1200px) {
+        @media screen and (min-width: 900px) {
             .top-bar {
-                width: calc(100vw - 100px);
-                max-width: none;
+                width: min(1600px, calc(100vw - 40px));
                 margin-left: 50%;
                 transform: translateX(-50%);
                 justify-content: flex-start;
@@ -87,9 +86,6 @@
             }
 
             .top-bar > .site-label { flex: 0 1 auto; }
-            .top-bar > .download-pdf {
-                margin-left: clamp(0px, calc(50vw - 642px), 260px);
-            }
             .top-bar > .download-pdf,
             .top-bar > .top-bar-controls > .translate-widget,
             .top-bar > .top-bar-controls > .theme-toggle { flex: 0 0 auto; }
@@ -115,11 +111,11 @@
             display: contents;
         }
 
-        @media screen and (min-width: 1200px) and (max-width: 1350px) {
+        @media screen and (min-width: 900px) and (max-width: 1350px) {
             .top-bar .translate-title { display: none; }
         }
 
-        @media screen and (min-width: 1200px) and (max-width: 1350px) {
+        @media screen and (min-width: 900px) and (max-width: 1150px) {
             .top-bar > .site-label { display: none; }
         }
 
