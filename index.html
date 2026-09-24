@@ -1,995 +1,1758 @@
-// ============================================================
-// CERTIFICATES / DIPLOMAS
-// ============================================================
-
-window.CERTIFICATES = [
-
-  // 1
-  {
-    title: "Cyber Security Master Diploma",
-    category: "Diploma",
-    soon: true
-  },
-
-  // 2
-  {
-    title: "Cyber Security Bachelor Diploma",
-    category: "Diploma",
-    file: "cyber-security-bachelor-diploma.pdf"
-  },
-
-  // 3
-  {
-    title: "Certified Ethical Hacker (CEH)",
-    category: "Certification",
-    file: "certified-ethical-hacker-ceh.pdf"
-  },
-
-  // 4
-  {
-    title: "CISM",
-    category: "Certification",
-    file: "cism.pdf"
-  },
-
-  // 5
-  {
-    title: "SecurityX CE",
-    category: "Certification",
-    file: "securityx-ce.pdf"
-  },
-
-  // 6
-  {
-    title: "PenTest+",
-    category: "Certification",
-    file: "pentest-plus.pdf"
-  },
-
-  // 7
-  {
-    title: "ITIL-4",
-    category: "Certification",
-    file: "itil-4.pdf"
-  },
-
-  // 8
-  {
-    title: "CySA+",
-    category: "Certification",
-    file: "cysa-plus.pdf"
-  },
-
-  // 9
-  {
-    title: "Security+ CE",
-    category: "Certification",
-    file: "security-plus-ce.pdf"
-  },
-
-  // 10
-  {
-    title: "AWS Certified Solutions Architect – Associate",
-    category: "Certification",
-    file: "aws-certified-solutions-architect-associate.pdf"
-  },
-
-  // 11
-  {
-    title: "Network+",
-    category: "Certification",
-    file: "network-plus.pdf"
-  },
-
-  // 12
-  {
-    title: "Data+ CE",
-    category: "Certification",
-    file: "data-plus-ce.pdf"
-  },
-
-  // 13
-  {
-    title: "Network+ CE",
-    category: "Certification",
-    file: "network-plus-ce.pdf"
-  },
-
-  // 14
-  {
-    title: "A+ CE",
-    category: "Certification",
-    file: "a-plus-ce.pdf"
-  },
-
-  // 15
-  {
-    title: "Linux LP1 Certificate",
-    category: "Certificate",
-    file: "linux-lp1-certificate.pdf"
-  },
-
-  // 16
-  {
-    title: "ISO/IEC 27001 Lead Auditor",
-    category: "Certificate",
-    file: "iso-iec-27001-lead-auditor.pdf"
-  },
-
-  // 17
-  {
-    title: "Applying Assessment & Authorization (A&A) in the National Industrial Security Program (NISP)",
-    category: "Certificate",
-    file: "applying-assessment-authorization-aa-nisp.pdf"
-  },
-
-  // 18
-  {
-    title: "Cyber Security Awareness",
-    category: "Certificate",
-    file: "cyber-security-awareness.pdf"
-  },
-
-  // 19
-  {
-    title: "Cybersecurity for Personnel",
-    category: "Certificate",
-    file: "cybersecurity-for-personnel.pdf"
-  },
-
-  // 20
-  {
-    title: "Introduction to DoD Zero Trust",
-    category: "Certificate",
-    file: "introduction-to-dod-zero-trust.pdf"
-  },
-
-  // 21
-  {
-    title: "Phishing and Social Engineering",
-    category: "Certificate",
-    file: "phishing-and-social-engineering.pdf"
-  }
-
-];
-
-
-// ============================================================
-// CERTIFICATE PAGE / VIEWER
-// ============================================================
-
-(() => {
-
-  'use strict';
-
-  const $ = id => document.getElementById(id);
-  const root = document.documentElement;
-
-
-  // ==========================================================
-  // LIGHT / DARK MODE
-  // ==========================================================
-
-  try {
-
-    root.dataset.theme =
-      localStorage.getItem('resume_theme') ||
-      (
-        matchMedia('(prefers-color-scheme: dark)').matches
-          ? 'dark'
-          : 'light'
-      );
-
-  } catch {
-
-    root.dataset.theme = 'light';
-
-  }
-
-
-  $('theme').onclick = () => {
-
-    root.dataset.theme =
-      root.dataset.theme === 'dark'
-        ? 'light'
-        : 'dark';
-
-    try {
-
-      localStorage.setItem(
-        'resume_theme',
-        root.dataset.theme
-      );
-
-    } catch {}
-
-  };
-
-
-  // ==========================================================
-  // VIEWER VARIABLES
-  // ==========================================================
-
-  let sequence = 0;
-  let task = null;
-  let pdf = null;
-  let pageNumber = 1;
-  let busy = false;
-
-  let pdfLibrary;
-
-  let activeCertificate = -1;
-
-  const browsableCertificates = [];
-
-
-  // ==========================================================
-  // CERTIFICATE NAVIGATION
-  // ==========================================================
-
-  function updateCertificateNavigation() {
-
-    $('previous-certificate').disabled =
-      activeCertificate <= 0;
-
-    $('next-certificate').disabled =
-      activeCertificate < 0 ||
-      activeCertificate >= browsableCertificates.length - 1;
-
-    $('certificate-position').textContent =
-      `Document ${activeCertificate + 1} of ${browsableCertificates.length}`;
-
-  }
-
-
-  function showCertificate(index) {
-
-    if (
-      index < 0 ||
-      index >= browsableCertificates.length
-    ) {
-      return;
-    }
-
-    activeCertificate = index;
-
-    updateCertificateNavigation();
-
-    const entry =
-      browsableCertificates[index];
-
-    openDocument(
-      entry.item,
-      entry.url,
-      entry.extension
-    );
-
-  }
-
-
-  $('previous-certificate').onclick = () => {
-
-    showCertificate(
-      activeCertificate - 1
-    );
-
-  };
-
-
-  $('next-certificate').onclick = () => {
-
-    showCertificate(
-      activeCertificate + 1
-    );
-
-  };
-
-
-  // ==========================================================
-  // PDF.JS
-  // ==========================================================
-
-  async function getPdfLibrary() {
-
-    if (!pdfLibrary) {
-
-      pdfLibrary = import(
-        'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.149/build/pdf.min.mjs'
-      )
-
-      .then(lib => {
-
-        lib.GlobalWorkerOptions.workerSrc =
-          'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.149/build/pdf.worker.min.mjs';
-
-        return lib;
-
-      })
-
-      .catch(error => {
-
-        pdfLibrary = null;
-
-        throw error;
-
-      });
-
-    }
-
-    return pdfLibrary;
-
-  }
-
-
-  // ==========================================================
-  // CLEAN VIEWER
-  // ==========================================================
-
-  function cleanup() {
-
-    sequence++;
-
-    const previousTask = task;
-
-    task = null;
-    pdf = null;
-    busy = false;
-
-    if (previousTask) {
-
-      previousTask
-        .destroy()
-        .catch(() => {});
-
-    }
-
-    $('viewport').replaceChildren();
-
-    $('paging').hidden = true;
-
-    $('status').textContent = '';
-
-  }
-
-
-  // ==========================================================
-  // CLOSE VIEWER
-  // ==========================================================
-
-  $('close').onclick = () => {
-
-    $('viewer').close();
-
-  };
-
-
-  $('viewer').addEventListener(
-    'close',
-    cleanup
-  );
-
-
-  // ==========================================================
-  // PREVENT EASY RIGHT CLICK / DRAG
-  // ==========================================================
-
-  $('viewport').addEventListener(
-    'contextmenu',
-    event => event.preventDefault()
-  );
-
-
-  $('viewport').addEventListener(
-    'dragstart',
-    event => event.preventDefault()
-  );
-
-
-  // ==========================================================
-  // PDF PAGE CONTROLS
-  // ==========================================================
-
-  function controls() {
-
-    $('prev').disabled =
-      busy ||
-      pageNumber <= 1;
-
-    $('next').disabled =
-      busy ||
-      !pdf ||
-      pageNumber >= pdf.numPages;
-
-    $('page-info').textContent =
-      pdf
-        ? `Page ${pageNumber} of ${pdf.numPages}`
-        : '';
-
-  }
-
-
-  // ==========================================================
-  // RENDER PDF PAGE
-  // ==========================================================
-
-  async function renderPage(token) {
-
-    busy = true;
-
-    controls();
-
-    $('status').textContent =
-      'Loading page…';
-
-    $('viewport').replaceChildren();
-
-
-    try {
-
-      const page =
-        await pdf.getPage(pageNumber);
-
-
-      if (token !== sequence) {
-        return;
-      }
-
-
-      const unit =
-        page.getViewport({
-          scale: 1
-        });
-
-
-      const width =
-        Math.min(
-          1000,
-          Math.max(
-            240,
-            $('viewport').clientWidth - 32
-          )
-        );
-
-
-      const viewport =
-        page.getViewport({
-
-          scale:
-            width /
-            unit.width *
-            Math.min(
-              devicePixelRatio || 1,
-              2
-            )
-
-        });
-
-
-      const canvas =
-        document.createElement('canvas');
-
-
-      canvas.width =
-        Math.ceil(viewport.width);
-
-      canvas.height =
-        Math.ceil(viewport.height);
-
-
-      canvas.style.width =
-        `${width}px`;
-
-
-      canvas.setAttribute(
-        'role',
-        'img'
-      );
-
-
-      canvas.setAttribute(
-        'aria-label',
-        `${$('viewer-title').textContent}, page ${pageNumber}`
-      );
-
-
-      await page.render({
-
-        canvasContext:
-          canvas.getContext('2d'),
-
-        viewport
-
-      }).promise;
-
-
-      if (token !== sequence) {
-        return;
-      }
-
-
-      $('viewport')
-        .replaceChildren(canvas);
-
-
-      $('status').textContent = '';
-
-
-    } catch (error) {
-
-
-      if (token === sequence) {
-
-        $('status').textContent =
-          'This page could not be displayed. Close and reopen the document to retry.';
-
-      }
-
-
-    } finally {
-
-
-      if (token === sequence) {
-
-        busy = false;
-
-        controls();
-
-      }
-
-    }
-
-  }
-
-
-  // ==========================================================
-  // OPEN CERTIFICATE / DIPLOMA
-  // ==========================================================
-
-  async function openDocument(
-    item,
-    url,
-    extension
-  ) {
-
-    cleanup();
-
-    const token = sequence;
-
-
-    $('viewer-title').textContent =
-      item.title;
-
-
-    $('status').textContent =
-      'Loading document…';
-
-
-    if (!$('viewer').open) {
-
-      $('viewer').showModal();
-
-      $('close').focus();
-
-    }
-
-
-    try {
-
-
-      // ======================================================
-      // PDF
-      // ======================================================
-
-      if (extension === 'pdf') {
-
-
-        const lib =
-          await getPdfLibrary();
-
-
-        if (token !== sequence) {
-          return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jaouad El Ghouzi - Cybersecurity Engineer Resume">
+    <title>Jaouad El Ghouzi | Cybersecurity Resume</title>
+
+    <style>
+        :root {
+            --bg-color: #f6f8fb;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent-primary: #4f46e5;
+            --accent-secondary: #0891b2;
+            --accent-tertiary: #e11d48;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 14px rgba(15, 23, 42, 0.10);
         }
 
-
-        task =
-          lib.getDocument({
-
-            url: url.href,
-
-            isEvalSupported: false
-
-          });
-
-
-        const document =
-          await task.promise;
-
-
-        if (token !== sequence) {
-          return;
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --accent-primary: #818cf8;
+            --accent-secondary: #22d3ee;
+            --accent-tertiary: #fb7185;
+            --border-color: #334155;
+            --shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
         }
 
+        * {
+            box-sizing: border-box;
+        }
 
-        pdf = document;
+        body {
+            margin: 0;
+            padding: 0 0 3rem;
+            background: var(--bg-color);
+            color: var(--text-main);
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.55;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            top: 0 !important;
+        }
 
-        pageNumber = 1;
+        .container {
+            max-width: 1150px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            gap: 1.75rem;
+        }
 
+        .top-bar {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
 
-        $('paging').hidden = false;
+        .site-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
 
+        .top-bar-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
 
-        await renderPage(token);
+        /* DOWNLOAD PDF BUTTON */
+        .download-pdf {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            min-height: 58px;
+            padding: 0.7rem 1.1rem;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            background: #4338ca;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 800;
+            line-height: 1.25;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(67, 56, 202, 0.25);
+        }
 
+        .download-pdf:hover {
+            background: #3730a3;
+        }
 
-      }
+        .download-pdf:focus-visible {
+            outline: 3px solid var(--text-main);
+            outline-offset: 4px;
+        }
 
+        .download-pdf svg {
+            flex: 0 0 auto;
+        }
 
-      // ======================================================
-      // IMAGE
-      // ======================================================
+        [data-theme="dark"] .download-pdf {
+            background: #a5b4fc;
+            color: #0f172a;
+        }
 
-      else {
+        [data-theme="dark"] .download-pdf:hover {
+            background: #c7d2fe;
+        }
 
+        @media screen and (max-width: 800px) {
+            .download-pdf {
+                width: 100%;
+            }
+        }
 
-        const img =
-          new Image();
+        /* THEME BUTTON */
+        .theme-toggle {
+            border: none;
+            border-radius: 12px;
+            min-height: 58px;
+            padding: 0.6rem 1.1rem;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 700;
+            background: linear-gradient(
+                135deg,
+                var(--accent-primary),
+                var(--accent-secondary)
+            );
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.18);
+        }
 
+        .theme-toggle:hover {
+            opacity: 0.9;
+        }
 
-        img.alt =
-          item.title;
+        /* TRANSLATION CONTROLS */
+        .translate-widget {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            min-height: 58px;
+            padding: 0.5rem 0.7rem 0.5rem 0.9rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
 
+        .translate-widget:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-primary);
+        }
 
-        img.draggable =
-          false;
+        .translate-icon {
+            flex: 0 0 auto;
+            font-size: 1.35rem;
+            line-height: 1;
+        }
 
+        .translate-title {
+            flex: 0 0 auto;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
 
-        img.onload = () => {
+        #google_translate_element {
+            display: inline-flex;
+            align-items: center;
+            min-width: 210px;
+        }
 
+        #google_translate_element .goog-te-gadget {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.4rem;
+            margin: 0 !important;
+            color: transparent !important;
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+            font-size: 0 !important;
+        }
 
-          if (token !== sequence) {
-            return;
-          }
+        #google_translate_element .goog-te-combo {
+            width: 220px !important;
+            min-width: 220px !important;
+            min-height: 42px !important;
+            margin: 0 !important;
+            padding: 0.5rem 0.7rem !important;
+            color: var(--text-main) !important;
+            background-color: var(--bg-color) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            outline: none !important;
+            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+        }
 
+        #google_translate_element .goog-te-combo:hover,
+        #google_translate_element .goog-te-combo:focus {
+            border-color: var(--accent-primary) !important;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12) !important;
+        }
 
-          $('viewport')
-            .replaceChildren(img);
+        #google_translate_element .goog-te-combo option {
+            color: #1e293b !important;
+            background: #ffffff !important;
+            font-size: 0.95rem !important;
+        }
 
+        .translate-loading {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
 
-          $('status').textContent = '';
+        .translate-reset {
+            flex: 0 0 auto;
+            min-width: 44px;
+            min-height: 42px;
+            padding: 0.4rem 0.65rem;
+            color: #ffffff;
+            background: linear-gradient(
+                135deg,
+                var(--accent-secondary),
+                var(--accent-primary)
+            );
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 800;
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+        }
 
+        .translate-reset:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* HIDE GOOGLE TRANSLATE BANNER / TOOLTIP */
+        .goog-te-banner-frame,
+        .goog-te-banner-frame.skiptranslate,
+        .VIpgJd-ZVi9od-ORHb-OEVmcd,
+        #goog-gt-tt,
+        .goog-te-balloon-frame,
+        .VIpgJd-yAWNEb-L7lbkb {
+            display: none !important;
+        }
+
+        .goog-text-highlight {
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        /* RESUME CARDS */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.4rem;
+            margin-bottom: 1.35rem;
+            box-shadow: var(--shadow);
+            transition:
+                transform 0.2s ease,
+                background-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin-top: 0;
+        }
+
+        h1 {
+            margin-bottom: 0.35rem;
+            color: var(--text-main);
+            font-size: 1.7rem;
+            line-height: 1.2;
+        }
+
+        h3 {
+            margin-bottom: 0.25rem;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            line-height: 1.35;
+        }
+
+        p,
+        li {
+            color: var(--text-muted);
+            font-size: 0.93rem;
+        }
+
+        .section-heading {
+            margin-bottom: 1rem;
+            padding-bottom: 0.55rem;
+            color: var(--accent-tertiary);
+            border-bottom: 2px solid var(--border-color);
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+        .profile-card {
+            text-align: center;
+        }
+
+        .profile-photo-wrap {
+            width: 155px;
+            height: 155px;
+            margin: 0 auto 1rem;
+            padding: 4px;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                var(--accent-primary),
+                var(--accent-secondary)
+            );
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.22);
+        }
+
+        .profile-photo {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--card-bg);
+            object-fit: cover;
+            object-position: 50% 12%;
+        }
+
+        .role-title {
+            margin: 0.5rem 0 0;
+            color: var(--accent-primary);
+            font-size: 0.86rem;
+            font-weight: 800;
+            letter-spacing: 0.7px;
+            line-height: 1.5;
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            margin: 1rem 0 0;
+            padding: 0.6rem;
+            color: var(--accent-primary);
+            background: var(--bg-color);
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .contact-info {
+            margin-top: 1.3rem;
+            text-align: left;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0.9rem;
+        }
+
+        .contact-label {
+            color: var(--accent-primary);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .contact-value {
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .contact-value a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .contact-value a:hover {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+        }
+
+        .clean-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .clean-list li {
+            margin-bottom: 0.65rem;
+            padding-left: 0.75rem;
+            color: var(--text-main);
+            border-left: 3px solid var(--accent-secondary);
+            font-size: 0.88rem;
+        }
+
+        .job-block {
+            margin-bottom: 2rem;
+        }
+
+        .job-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .company-location {
+            margin-bottom: 0.25rem;
+            color: var(--accent-primary);
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .date-badge {
+            display: inline-block;
+            margin-bottom: 0.55rem;
+            padding: 0.2rem 0.55rem;
+            color: var(--text-muted);
+            background: var(--bg-color);
+            border-radius: 5px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .bullet-list {
+            margin: 0.45rem 0 0;
+            padding-left: 1.2rem;
+        }
+
+        .bullet-list li {
+            margin-bottom: 0.48rem;
+        }
+
+        .competency-block {
+            margin-bottom: 1rem;
+        }
+
+        .competency-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .competency-title {
+            display: block;
+            margin-bottom: 0.2rem;
+            color: var(--text-main);
+            font-size: 0.92rem;
+            font-weight: 800;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.2rem;
+        }
+
+        .skill-category {
+            padding: 1rem;
+            background: var(--bg-color);
+            border-radius: 9px;
+        }
+
+        .skill-category strong {
+            display: block;
+            margin-bottom: 0.35rem;
+            color: var(--accent-primary);
+            font-size: 0.9rem;
+        }
+
+        .language-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.3rem 0.55rem;
+            color: var(--text-main);
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        /* RESPONSIVE WEBPAGE */
+        @media screen and (max-width: 800px) {
+            .container {
+                grid-template-columns: 1fr;
+                margin-top: 1rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-photo-wrap {
+                width: 135px;
+                height: 135px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .top-bar-controls {
+                width: 100%;
+                align-items: stretch;
+            }
+
+            .translate-widget {
+                flex: 1 1 100%;
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            #google_translate_element {
+                flex: 1;
+                min-width: 150px;
+            }
+
+            #google_translate_element .goog-te-gadget {
+                width: 100%;
+            }
+
+            #google_translate_element .goog-te-combo {
+                width: 100% !important;
+                min-width: 150px !important;
+            }
+        }
+
+        @media screen and (max-width: 520px) {
+            .translate-title {
+                display: none;
+            }
+
+            .translate-widget {
+                gap: 0.45rem;
+                padding: 0.45rem 0.55rem;
+            }
+
+            #google_translate_element {
+                min-width: 125px;
+            }
+
+            #google_translate_element .goog-te-combo {
+                min-width: 125px !important;
+                font-size: 0.85rem !important;
+            }
+        }
+
+        /*
+         * TWO-PAGE PRINT / PDF LAYOUT
+         * Verified for the English resume on Letter paper at 100% scale
+         * with browser headers and footers disabled.
+         */
+        @media print {
+            @page {
+                size: letter portrait;
+                margin: 0.35in 0.4in;
+            }
+
+            :root,
+            [data-theme="dark"] {
+                --bg-color: #ffffff;
+                --card-bg: #ffffff;
+                --text-main: #172033;
+                --text-muted: #334155;
+                --accent-primary: #3730a3;
+                --accent-secondary: #0e7490;
+                --accent-tertiary: #be123c;
+                --border-color: #cbd5e1;
+                --shadow: none;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+                font-size: 9pt;
+                line-height: 1.24;
+            }
+
+            .container {
+                display: block;
+                max-width: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .top-bar,
+            .profile-photo-wrap,
+            .profile-photo,
+            .pdf-preview-tools,
+            .download-pdf,
+            .translate-widget,
+            #google_translate_element {
+                display: none !important;
+            }
+
+            aside {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 7pt;
+                margin-bottom: 7pt;
+            }
+
+            .card {
+                padding: 7pt;
+                margin: 0 0 7pt;
+                border: 1px solid #cbd5e1;
+                border-radius: 0;
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+            aside .card {
+                margin: 0;
+            }
+
+            .card:hover {
+                transform: none;
+            }
+
+            h1 {
+                font-size: 16pt;
+                margin-bottom: 4pt;
+            }
+
+            h3 {
+                font-size: 10pt;
+                line-height: 1.2;
+                margin-bottom: 2pt;
+            }
+
+            p,
+            li,
+            .clean-list li,
+            .contact-value,
+            .competency-title,
+            .company-location,
+            .skill-category strong {
+                font-size: 9pt;
+            }
+
+            p {
+                margin-bottom: 4pt;
+            }
+
+            .section-heading {
+                font-size: 9pt;
+                letter-spacing: 0.6pt;
+                padding-bottom: 3pt;
+                margin-bottom: 5pt;
+            }
+
+            .role-title {
+                font-size: 8pt;
+                line-height: 1.2;
+                margin-top: 3pt;
+                letter-spacing: 0;
+            }
+
+            .status-badge {
+                font-size: 8pt;
+                padding: 3pt;
+                margin-top: 4pt;
+            }
+
+            .contact-info {
+                margin-top: 6pt;
+            }
+
+            .contact-item {
+                margin-bottom: 4pt;
+            }
+
+            .contact-label {
+                font-size: 7pt;
+                letter-spacing: 0.3pt;
+            }
+
+            .contact-value {
+                font-size: 8pt;
+            }
+
+            .clean-list li {
+                margin-bottom: 3pt;
+                padding-left: 4pt;
+                border-left-width: 2px;
+            }
+
+            .competency-block {
+                margin-bottom: 5pt;
+            }
+
+            .competency-title {
+                margin-bottom: 2pt;
+            }
+
+            .language-tags {
+                gap: 3pt;
+            }
+
+            .tag {
+                padding: 2pt 4pt;
+                font-size: 8pt;
+            }
+
+            main > .card:nth-child(2) {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0 10pt;
+            }
+
+            main > .card:nth-child(2) > .section-heading {
+                grid-column: 1 / -1;
+            }
+
+            main > .card:nth-child(3) {
+                break-before: page;
+                page-break-before: always;
+            }
+
+            .job-block {
+                margin-bottom: 4pt;
+            }
+
+            .company-location {
+                margin-bottom: 2pt;
+            }
+
+            .date-badge {
+                font-size: 8pt;
+                padding: 1pt 3pt;
+                margin-bottom: 2pt;
+            }
+
+            .bullet-list {
+                margin-top: 3pt;
+                padding-left: 12pt;
+            }
+
+            .bullet-list li {
+                margin-bottom: 1pt;
+                font-size: 8pt;
+                line-height: 1.12;
+            }
+
+            .skills-grid {
+                display: block;
+            }
+
+            .skill-category {
+                padding: 2pt 0;
+                border-radius: 0;
+                font-size: 8pt;
+                line-height: 1.15;
+            }
+
+            .skill-category strong {
+                display: inline;
+                margin-right: 4pt;
+                font-size: 8pt;
+            }
+
+            h1,
+            h3,
+            .section-heading {
+                break-after: avoid;
+            }
+
+            li,
+            .contact-item,
+            .competency-block {
+                break-inside: avoid;
+            }
+
+            p,
+            li {
+                orphans: 2;
+                widows: 2;
+            }
+        }
+
+        /* Certificate page navigation */
+        .certificates-link { text-decoration: none; background: #0e7490; }
+        .certificates-link:hover { background: #155e75; }
+        [data-theme="dark"] .certificates-link { background: #67e8f9; color: #0f172a; }
+        [data-theme="dark"] .certificates-link:hover { background: #a5f3fc; }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- TOP BAR -->
+        <header class="top-bar">
+            <div class="site-label">
+                Cybersecurity Resume
+            </div>
+
+            <button
+                type="button"
+                class="download-pdf notranslate"
+                translate="no"
+                onclick="downloadPDF()"
+                title="Open a separate two-page PDF view, then choose Save as PDF"
+            >
+                <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                >
+                    <path d="M12 3v12m-5-5 5 5 5-5M5 16v5h14v-5" />
+                </svg>
+                <span>Download PDF</span>
+            </button>
+
+            <a class="download-pdf certificates-link notranslate" href="certificates.html" translate="no">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M7 7h10M7 11h5M15 17v5l3-2 3 2v-5"/></svg>
+                <span>My certificates</span>
+            </a>
+
+            <div class="top-bar-controls">
+                <div
+                    class="translate-widget"
+                    title="Translate this resume"
+                >
+                    <span class="translate-icon" aria-hidden="true">
+                        🌐
+                    </span>
+
+                    <span
+                        class="translate-title notranslate"
+                        translate="no"
+                    >
+                        Translate
+                    </span>
+
+                    <div id="google_translate_element">
+                        <span class="translate-loading">
+                            Loading languages…
+                        </span>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="translate-reset notranslate"
+                        translate="no"
+                        onclick="restoreOriginalLanguage()"
+                        title="Return to the original English resume"
+                        aria-label="Return to English"
+                    >
+                        EN
+                    </button>
+                </div>
+
+                <button
+                    class="theme-toggle"
+                    onclick="toggleTheme()"
+                    aria-label="Switch between light and dark mode"
+                >
+                    ☀ / ☾ Mode
+                </button>
+            </div>
+        </header>
+
+        <!-- LEFT SIDEBAR -->
+        <aside>
+
+            <!-- PROFILE -->
+            <section class="card profile-card">
+                <div class="profile-photo-wrap">
+                    <img
+                        class="profile-photo"
+                        src="profile.jpg.png"
+                        alt="Jaouad El Ghouzi"
+                    >
+                </div>
+
+                <h1>Jaouad El Ghouzi</h1>
+
+                <div class="role-title">
+                    Cybersecurity Engineer<br>
+                    Penetration Tester<br>
+                    Systems Administrator
+                </div>
+
+                <div class="status-badge">
+                    U.S. Citizen<br>
+                    Active Tier 4 Government Background Investigation
+                </div>
+
+                <!-- CONTACT INFORMATION -->
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span class="contact-label">
+                            Location
+                        </span>
+                        <span class="contact-value">
+                            Brambleton, VA 20148
+                        </span>
+                    </div>
+
+                    <div class="contact-item">
+                        <span class="contact-label">
+                            Phone
+                        </span>
+                        <span class="contact-value">
+                            <a href="tel:+15712459013">
+                                571-245-9013
+                            </a>
+                        </span>
+                    </div>
+
+                    <div class="contact-item">
+                        <span class="contact-label">
+                            Email
+                        </span>
+                        <span class="contact-value">
+                            <a href="mailto:Jaouad@usa.com">
+                                Jaouad@usa.com
+                            </a>
+                        </span>
+                    </div>
+
+                    <div class="contact-item">
+                        <span class="contact-label">
+                            LinkedIn
+                        </span>
+                        <span class="contact-value">
+                            <a
+                                href="https://www.linkedin.com/in/jaouad-el-ghouzi/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="Visit Jaouad El Ghouzi on LinkedIn"
+                            >
+                                linkedin.com/in/jaouad-el-ghouzi
+                            </a>
+                        </span>
+                    </div>
+
+                    <div class="contact-item">
+                        <span class="contact-label">
+                            Credly Certifications
+                        </span>
+                        <span class="contact-value">
+                            <a
+                                href="https://www.credly.com/users/jaouad-el-ghouzi"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="View Jaouad El Ghouzi's verified credentials on Credly"
+                            >
+                                credly.com/users/jaouad-el-ghouzi
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CORE COMPETENCIES -->
+            <section class="card">
+                <div class="section-heading">
+                    Core Competencies
+                </div>
+
+                <ul class="clean-list">
+                    <li>Incident Response &amp; Threat Hunting</li>
+                    <li>IOC Analysis &amp; Security Monitoring</li>
+                    <li>Phishing &amp; Email Security Investigation</li>
+                    <li>Vulnerability Management</li>
+                    <li>Network &amp; Web Penetration Testing</li>
+                    <li>Active Directory Assessments</li>
+                    <li>Digital Forensics &amp; Timeline Analysis</li>
+                    <li>Microsoft 365 &amp; Entra ID</li>
+                    <li>NIST &amp; DISA STIG Hardening</li>
+                    <li>Azure &amp; AWS Cloud Infrastructure</li>
+                </ul>
+            </section>
+
+            <!-- CERTIFICATIONS -->
+            <section class="card">
+                <div class="section-heading">
+                    Professional Certifications
+                </div>
+
+                <ul class="clean-list">
+                    <li>CISM</li>
+                    <li>Certified Ethical Hacker (CEH)</li>
+                    <li>CompTIA SecurityX</li>
+                    <li>CompTIA PenTest+</li>
+                    <li>CompTIA CySA+</li>
+                    <li>CompTIA Security+</li>
+                    <li>AWS Solutions Architect – Associate</li>
+                    <li>Azure Administrator Associate</li>
+                    <li>LPIC-1</li>
+                    <li>CompTIA Network+</li>
+                    <li>CompTIA A+</li>
+                    <li>CompTIA Data+</li>
+                    <li>ITIL 4 – IT Service Management</li>
+                </ul>
+            </section>
+
+            <!-- EDUCATION -->
+            <section class="card">
+                <div class="section-heading">
+                    Education
+                </div>
+
+                <div class="competency-block">
+                    <span class="competency-title">
+                        Master of Science,
+                        Cybersecurity and Information Assurance
+                    </span>
+                    <p>
+                        Western Governors University (WGU)
+                    </p>
+                </div>
+
+                <div class="competency-block">
+                    <span class="competency-title">
+                        Bachelor of Science,
+                        Cybersecurity and Information Assurance
+                    </span>
+                    <p>
+                        Western Governors University (WGU)
+                    </p>
+                </div>
+            </section>
+
+            <!-- LANGUAGES -->
+            <section class="card">
+                <div class="section-heading">
+                    Languages
+                </div>
+
+                <div class="language-tags">
+                    <span class="tag">English</span>
+                    <span class="tag">Arabic</span>
+                    <span class="tag">French</span>
+                    <span class="tag">Spanish</span>
+                    <span class="tag">Turkish</span>
+                </div>
+            </section>
+
+            <!-- ADDITIONAL INFORMATION -->
+            <section class="card">
+                <div class="section-heading">
+                    Additional Information
+                </div>
+
+                <ul class="clean-list">
+                    <li>U.S. Citizen</li>
+                    <li>
+                        Active Tier 4 Government Background Investigation
+                    </li>
+                    <li>Valid Driver's License</li>
+                    <li>
+                        Government &amp; Commercial Environment Experience
+                    </li>
+                </ul>
+            </section>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main>
+
+            <!-- PROFESSIONAL SUMMARY -->
+            <section class="card">
+                <div class="section-heading">
+                    Professional Summary
+                </div>
+
+                <p>
+                    Cybersecurity Engineer and Systems Administrator with
+                    9+ years of progressive IT experience spanning security
+                    operations, incident response, digital forensics,
+                    vulnerability management, penetration testing,
+                    Microsoft 365 administration, cloud infrastructure,
+                    and enterprise systems support. Experienced supporting
+                    commercial and government environments, including
+                    EPA-related systems and state/local government
+                    infrastructure. Hands-on experience investigating
+                    phishing, suspicious executables, remote-access
+                    activity, endpoint indicators, and email security
+                    incidents. Skilled with Microsoft Defender, Nessus,
+                    Splunk, Wazuh, Autopsy, FTK, Burp Suite, Metasploit,
+                    Cobalt Strike, Sliver, and Mythic, with strong knowledge
+                    of Active Directory, Group Policy, Azure, AWS,
+                    NIST controls, and DISA STIG-aligned hardening.
+                </p>
+            </section>
+
+            <!-- CORE TECHNICAL COMPETENCIES -->
+            <section class="card">
+                <div class="section-heading">
+                    Core Technical Competencies
+                </div>
+
+                <div class="competency-block">
+                    <span class="competency-title">
+                        Security Operations
+                    </span>
+                    <p>
+                        Incident Response, Threat Hunting, IOC Analysis,
+                        EDR, Email Security, Phishing Investigation,
+                        Vulnerability Management, Security Monitoring,
+                        NIST, DISA STIG
+                    </p>
+                </div>
+
+                <div class="competency-block">
+                    <span class="competency-title">
+                        Offensive Security
+                    </span>
+                    <p>
+                        Network &amp; Web Penetration Testing,
+                        Active Directory Assessments,
+                        Vulnerability Exploitation,
+                        Adversary Simulation,
+                        Red Team Operations,
+                        Privilege Escalation
+                    </p>
+                </div>
+
+                <div class="competency-block">
+                    <span class="competency-title">
+                        Digital Forensics
+                    </span>
+                    <p>
+                        Autopsy, FTK, Disk Images,
+                        Browser/Outlook Artifacts,
+                        Windows Prefetch,
+                        Persistence Analysis,
+                        SHA-256 Hashing,
+                        Timeline Reconstruction
+                    </p>
+                </div>
+
+                <div class="competency-block">
+                    <span class="competency-title">
+                        Microsoft / Cloud
+                    </span>
+                    <p>
+                        Microsoft 365,
+                        Entra ID,
+                        Active Directory,
+                        Group Policy,
+                        Microsoft Defender,
+                        Windows Server,
+                        Azure,
+                        AWS
+                    </p>
+                </div>
+
+                <div class="competency-block">
+                    <span class="competency-title">
+                        Security Tools
+                    </span>
+                    <p>
+                        Nessus,
+                        Splunk,
+                        Wazuh,
+                        Wireshark,
+                        Burp Suite,
+                        Metasploit,
+                        Cobalt Strike,
+                        Sliver,
+                        Mythic
+                    </p>
+                </div>
+            </section>
+
+            <!-- PROFESSIONAL EXPERIENCE -->
+            <section class="card">
+                <div class="section-heading">
+                    Professional Experience
+                </div>
+
+                <!-- GST -->
+                <article class="job-block">
+                    <h3>
+                        Cybersecurity Engineer / Systems Administrator
+                    </h3>
+
+                    <div class="company-location">
+                        Global Science &amp; Technology
+                        (GST/GTSC) — Chantilly, VA
+                    </div>
+
+                    <div class="date-badge">
+                        February 2025 – Present
+                    </div>
+
+                    <ul class="bullet-list">
+                        <li>
+                            Perform security monitoring, incident
+                            investigation, vulnerability analysis,
+                            endpoint security reviews, and remediation
+                            across enterprise and government environments.
+                        </li>
+
+                        <li>
+                            Investigate phishing, suspicious email activity,
+                            malicious executables, ScreenConnect/remote-access
+                            activity, and potentially compromised endpoints;
+                            analyze IOCs, endpoint telemetry, user activity,
+                            persistence, and network indicators.
+                        </li>
+
+                        <li>
+                            Support incident response from alert triage
+                            through investigation, containment recommendations,
+                            remediation, and technical documentation.
+                        </li>
+
+                        <li>
+                            Conduct vulnerability assessments and remediation
+                            using Nessus; prioritize findings based on severity,
+                            exposure, affected systems, and operational risk.
+                        </li>
+
+                        <li>
+                            Harden Windows systems using Active Directory
+                            Group Policy and security configurations aligned
+                            with NIST and DISA STIG guidance.
+                        </li>
+
+                        <li>
+                            Conduct forensic investigations using Autopsy
+                            and FTK to analyze disk images, browser artifacts,
+                            Outlook cache data, Windows Prefetch,
+                            file-system metadata, persistence mechanisms,
+                            and system timelines.
+                        </li>
+
+                        <li>
+                            Generate and document SHA-256 hashes,
+                            correlate forensic evidence across endpoint
+                            and email activity, and produce structured
+                            incident-response findings.
+                        </li>
+
+                        <li>
+                            Administer Active Directory accounts,
+                            groups, permissions, security policies,
+                            onboarding/offboarding, identity access,
+                            and enterprise permissions.
+                        </li>
+
+                        <li>
+                            Support Microsoft 365, Entra ID,
+                            Microsoft Defender, Windows endpoints,
+                            authentication, endpoint configuration,
+                            and enterprise collaboration services.
+                        </li>
+
+                        <li>
+                            Support EPA-related federal environments
+                            involving system monitoring,
+                            cybersecurity operations,
+                            compliance activities,
+                            and infrastructure administration.
+                        </li>
+
+                        <li>
+                            Deploy and maintain infrastructure supporting
+                            West Virginia county government organizations
+                            and document security, system,
+                            and remediation activities.
+                        </li>
+                    </ul>
+                </article>
+
+                <!-- NOVA -->
+                <article class="job-block">
+                    <h3>
+                        Systems Administrator
+                    </h3>
+
+                    <div class="company-location">
+                        Nova Marketing Inc — Manassas, VA
+                    </div>
+
+                    <div class="date-badge">
+                        April 2020 – December 2024
+                    </div>
+
+                    <ul class="bullet-list">
+                        <li>
+                            Administered and supported Windows workstations,
+                            servers, network devices, applications,
+                            and business technology infrastructure.
+                        </li>
+
+                        <li>
+                            Provided remote and onsite support;
+                            installed, configured, upgraded, maintained,
+                            and troubleshot desktops, servers,
+                            peripherals, and network equipment.
+                        </li>
+
+                        <li>
+                            Designed and implemented SMB network solutions
+                            including IP addressing, switching, routing,
+                            wireless connectivity, and related infrastructure.
+                        </li>
+
+                        <li>
+                            Managed user accounts, permissions,
+                            workstation configurations, backup systems,
+                            recovery operations, patching,
+                            software deployment, and system maintenance.
+                        </li>
+
+                        <li>
+                            Resolved escalated hardware, software,
+                            authentication, connectivity, and network issues
+                            while minimizing business disruption and
+                            maintaining technical documentation.
+                        </li>
+                    </ul>
+                </article>
+
+                <!-- YAKSHNA -->
+                <article class="job-block">
+                    <h3>
+                        Computer &amp; Networking System Technician
+                    </h3>
+
+                    <div class="company-location">
+                        Yakshna Solutions, Inc. (YSI) — Herndon, VA
+                    </div>
+
+                    <div class="date-badge">
+                        July 2017 – March 2020
+                    </div>
+
+                    <ul class="bullet-list">
+                        <li>
+                            Monitored and troubleshot computer systems,
+                            network infrastructure, applications,
+                            hardware, and security-related issues.
+                        </li>
+
+                        <li>
+                            Managed organizational backup and restore
+                            operations and participated in investigations
+                            involving security incidents and suspicious
+                            system behavior.
+                        </li>
+
+                        <li>
+                            Performed manual and automated testing
+                            of electronic filing applications and
+                            recommended corrective actions for
+                            technical findings.
+                        </li>
+
+                        <li>
+                            Managed network systems,
+                            workstation configurations,
+                            access-control technologies,
+                            onboarding/offboarding,
+                            user permissions,
+                            and technology inventory.
+                        </li>
+
+                        <li>
+                            Provided remote and onsite technical support
+                            and documented incidents, resolutions,
+                            and configuration changes.
+                        </li>
+                    </ul>
+                </article>
+
+                <!-- WCC -->
+                <article class="job-block">
+                    <h3>
+                        Cable Technician
+                    </h3>
+
+                    <div class="company-location">
+                        WCC-Cable — COX Communications Contractor —
+                        Herndon, VA
+                    </div>
+
+                    <div class="date-badge">
+                        December 2015 – June 2017
+                    </div>
+
+                    <ul class="bullet-list">
+                        <li>
+                            Installed and repaired telecommunications
+                            services for residential and commercial
+                            customers, including coaxial cable,
+                            Cat5 Ethernet, RJ45, RJ11,
+                            modems, routers, and related equipment.
+                        </li>
+
+                        <li>
+                            Diagnosed signal, connectivity, cabling,
+                            and equipment issues; tested and calibrated
+                            devices to ensure reliable service.
+                        </li>
+
+                        <li>
+                            Maintained tools and inventory,
+                            assisted junior technicians,
+                            educated customers,
+                            and documented installations and repairs.
+                        </li>
+                    </ul>
+                </article>
+            </section>
+
+            <!-- TECHNICAL SKILLS -->
+            <section class="card">
+                <div class="section-heading">
+                    Technical Skills
+                </div>
+
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <strong>
+                            Security
+                        </strong>
+                        <span>
+                            Microsoft Defender,
+                            Nessus,
+                            Splunk,
+                            Wazuh,
+                            vulnerability management,
+                            threat hunting,
+                            IOC analysis,
+                            incident response,
+                            endpoint security,
+                            phishing investigation,
+                            security hardening
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>
+                            Offensive Security
+                        </strong>
+                        <span>
+                            Burp Suite,
+                            Metasploit,
+                            Cobalt Strike,
+                            Sliver,
+                            Mythic,
+                            penetration testing,
+                            Active Directory security assessments,
+                            vulnerability exploitation,
+                            adversary simulation
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>
+                            Forensics
+                        </strong>
+                        <span>
+                            Autopsy,
+                            FTK,
+                            disk-image analysis,
+                            Windows/browser/Outlook artifacts,
+                            Prefetch analysis,
+                            persistence analysis,
+                            timeline reconstruction,
+                            SHA-256 hashing
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>
+                            Platforms
+                        </strong>
+                        <span>
+                            Microsoft 365,
+                            Entra ID,
+                            Active Directory,
+                            Group Policy,
+                            Windows Server,
+                            Windows 10/11,
+                            Linux,
+                            macOS,
+                            Azure,
+                            AWS
+                        </span>
+                    </div>
+
+                    <div class="skill-category">
+                        <strong>
+                            Networking
+                        </strong>
+                        <span>
+                            TCP/IP,
+                            DNS,
+                            DHCP,
+                            VPN,
+                            Ethernet,
+                            switching,
+                            routing,
+                            Wi-Fi,
+                            network troubleshooting,
+                            backup and recovery
+                        </span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        /*
+         * DOWNLOAD PDF
+         * Opens a separate print tab containing the currently displayed
+         * resume language, without the profile picture or top controls.
+         */
+        function downloadPDF() {
+            const printWindow = window.open("", "_blank");
+
+            if (!printWindow) {
+                alert(
+                    "Please allow pop-ups for this resume, " +
+                    "then click Download PDF again."
+                );
+                return;
+            }
+
+            const printPage = document.documentElement.cloneNode(true);
+            printPage.setAttribute("data-theme", "light");
+
+            printPage.querySelectorAll(
+                "script, iframe, .top-bar, .profile-photo-wrap, #goog-gt-tt"
+            ).forEach(element => element.remove());
+
+            // Show the print layout in the new tab as well as in the PDF.
+            printPage.querySelectorAll("style").forEach(style => {
+                style.textContent = style.textContent.replace(
+                    "@media print {",
+                    "@media all {"
+                );
+            });
+
+            const previewStyle = document.createElement("style");
+
+            previewStyle.textContent = `
+                @media screen {
+                    body {
+                        max-width: 7.7in;
+                        margin: 24px auto;
+                        padding: 16px;
+                    }
+
+                    .pdf-preview-tools {
+                        display: flex !important;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 16px;
+                        margin-bottom: 20px;
+                        padding: 12px;
+                        background: #eef2ff;
+                        font: 14px/1.4 Arial, sans-serif;
+                    }
+
+                    .pdf-preview-tools button {
+                        padding: 10px 16px;
+                        border: 0;
+                        border-radius: 8px;
+                        background: #4338ca;
+                        color: white;
+                        font: bold 14px Arial, sans-serif;
+                        cursor: pointer;
+                    }
+                }
+            `;
+
+            printPage.querySelector("head").appendChild(previewStyle);
+
+            const toolbar = document.createElement("div");
+            toolbar.className = "pdf-preview-tools notranslate";
+
+            toolbar.innerHTML =
+                '<span>PDF view · 2 pages<br>' +
+                'Choose Save as PDF, Letter paper, 100% scale, ' +
+                'and turn off headers and footers.</span>' +
+                '<button type="button" onclick="window.print()">' +
+                'Save as PDF</button>';
+
+            printPage.querySelector("body").prepend(toolbar);
+
+            printWindow.document.open();
+            printWindow.document.write(
+                "<!DOCTYPE html>" + printPage.outerHTML
+            );
+            printWindow.document.close();
+            printWindow.focus();
+
+            printWindow.setTimeout(() => {
+                printWindow.print();
+            }, 350);
+        }
+
+        /* LIGHT / DARK THEME */
+        const htmlElement = document.documentElement;
+
+        function toggleTheme() {
+            const currentTheme =
+                htmlElement.getAttribute("data-theme") || "light";
+
+            const newTheme =
+                currentTheme === "light" ? "dark" : "light";
+
+            htmlElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("resume_theme", newTheme);
+        }
+
+        const savedTheme = localStorage.getItem("resume_theme");
+
+        if (savedTheme) {
+            htmlElement.setAttribute("data-theme", savedTheme);
+        } else if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+            htmlElement.setAttribute("data-theme", "dark");
+        }
+
+        /* GOOGLE TRANSLATE */
+        window.googleTranslateElementInit = function () {
+            const translateContainer =
+                document.getElementById("google_translate_element");
+
+            if (translateContainer) {
+                translateContainer.innerHTML = "";
+            }
+
+            new google.translate.TranslateElement(
+                {
+                    pageLanguage: "en",
+                    autoDisplay: false,
+                    multilanguagePage: true
+                },
+                "google_translate_element"
+            );
         };
 
-
-        img.onerror = () => {
-
-
-          if (token === sequence) {
-
-            $('status').textContent =
-              'This image could not be loaded. Please check its published file path.';
-
-          }
-
-        };
-
-
-        img.src =
-          url.href;
-
-      }
-
-
-    } catch (error) {
-
-
-      if (token === sequence) {
-
-        $('status').textContent =
-          'This PDF could not be opened. Check the published file path and your connection. Password-protected PDFs are not supported.';
-
-      }
-
-    }
-
-  }
-
-
-  // ==========================================================
-  // PDF PREVIOUS PAGE
-  // ==========================================================
-
-  $('prev').onclick = () => {
-
-    if (
-      !busy &&
-      pdf &&
-      pageNumber > 1
-    ) {
-
-      pageNumber--;
-
-      renderPage(sequence);
-
-    }
-
-  };
-
-
-  // ==========================================================
-  // PDF NEXT PAGE
-  // ==========================================================
-
-  $('next').onclick = () => {
-
-    if (
-      !busy &&
-      pdf &&
-      pageNumber < pdf.numPages
-    ) {
-
-      pageNumber++;
-
-      renderPage(sequence);
-
-    }
-
-  };
-
-
-  // ==========================================================
-  // BUILD CERTIFICATE CARDS
-  // ==========================================================
-
-  const entries =
-    Array.isArray(window.CERTIFICATES)
-      ? window.CERTIFICATES
-      : [];
-
-
-  let count = 0;
-
-
-  for (const item of entries) {
-
-
-    if (
-      !item ||
-      typeof item.title !== 'string'
-    ) {
-      continue;
-    }
-
-
-    // ========================================================
-    // SOON ITEM
-    // ========================================================
-
-    if (item.soon) {
-
-
-      const card =
-        document.createElement('article');
-
-
-      card.className =
-        'card';
-
-
-      const type =
-        document.createElement('span');
-
-
-      type.className =
-        'tag';
-
-
-      type.textContent =
-        item.category ||
-        'Certificate';
-
-
-      const title =
-        document.createElement('h2');
-
-
-      title.textContent =
-        item.title;
-
-
-      const status =
-        document.createElement('span');
-
-
-      status.className =
-        'soon';
-
-
-      status.textContent =
-        'Soon';
-
-
-      card.append(
-        type,
-        title,
-        status
-      );
-
-
-      $('grid')
-        .append(card);
-
-
-      count++;
-
-
-      continue;
-
-    }
-
-
-    // ========================================================
-    // NORMAL CERTIFICATE
-    // ========================================================
-
-    if (
-      typeof item.file !== 'string'
-    ) {
-      continue;
-    }
-
-
-    let url;
-
-
-    try {
-
-      url =
-        new URL(
-          item.file,
-          document.baseURI
-        );
-
-    } catch {
-
-      continue;
-
-    }
-
-
-    const extension =
-      url.pathname
-        .split('.')
-        .pop()
-        .toLowerCase();
-
-
-    if (
-      !['http:', 'https:']
-        .includes(url.protocol) ||
-
-      ![
-        'pdf',
-        'jpg',
-        'jpeg',
-        'png'
-      ].includes(extension)
-    ) {
-
-      continue;
-
-    }
-
-
-    const card =
-      document.createElement('article');
-
-
-    card.className =
-      'card';
-
-
-    const type =
-      document.createElement('span');
-
-
-    type.className =
-      'tag';
-
-
-    type.textContent =
-      item.category ||
-      'Certificate';
-
-
-    const title =
-      document.createElement('h2');
-
-
-    title.textContent =
-      item.title;
-
-
-    const button =
-      document.createElement('button');
-
-
-    button.type =
-      'button';
-
-
-    button.className =
-      'view';
-
-
-    button.textContent =
-      'View document';
-
-
-    button.setAttribute(
-      'aria-label',
-      `View ${item.title}`
-    );
-
-
-    const certificateIndex =
-      browsableCertificates.length;
-
-
-    browsableCertificates.push({
-
-      item,
-      url,
-      extension
-
-    });
-
-
-    button.onclick = () =>
-      showCertificate(
-        certificateIndex
-      );
-
-
-    card.append(
-      type,
-      title,
-      button
-    );
-
-
-    $('grid')
-      .append(card);
-
-
-    count++;
-
-  }
-
-
-  // ==========================================================
-  // EMPTY LIST
-  // ==========================================================
-
-  if (!count) {
-
-
-    const empty =
-      document.createElement('p');
-
-
-    empty.className =
-      'empty';
-
-
-    empty.textContent =
-      'Certificates and diplomas will appear here when they are added.';
-
-
-    $('grid')
-      .append(empty);
-
-  }
-
-
-})();
+        /* RETURN TO ORIGINAL ENGLISH */
+        function restoreOriginalLanguage() {
+            const host = window.location.hostname;
+            const rootDomain = getRootDomain(host);
+
+            const cookieDomains = [
+                "",
+                host ? "." + host.replace(/^www\./, "") : "",
+                rootDomain ? "." + rootDomain : ""
+            ];
+
+            cookieDomains.forEach(function (domain) {
+                let cookie =
+                    "googtrans=; " +
+                    "expires=Thu, 01 Jan 1970 00:00:00 GMT; " +
+                    "max-age=0; " +
+                    "path=/; " +
+                    "SameSite=Lax";
+
+                if (domain) {
+                    cookie += "; domain=" + domain;
+                }
+
+                document.cookie = cookie;
+            });
+
+            window.location.reload();
+        }
+
+        function getRootDomain(hostname) {
+            if (
+                !hostname ||
+                hostname === "localhost" ||
+                /^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)
+            ) {
+                return "";
+            }
+
+            const parts = hostname
+                .replace(/^www\./, "")
+                .split(".");
+
+            if (parts.length < 2) {
+                return "";
+            }
+
+            return parts.slice(-2).join(".");
+        }
+    </script>
+
+    <script
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+        async>
+    </script>
+</body>
+</html>
