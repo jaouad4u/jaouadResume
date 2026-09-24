@@ -65,6 +65,40 @@
             gap: 0.75rem;
         }
 
+        /* Keep all header actions aligned in one row when space allows. */
+        .top-bar-controls {
+            display: contents;
+        }
+
+        .top-bar > .site-label {
+            margin-right: 0;
+            white-space: nowrap;
+        }
+
+        @media screen and (min-width: 900px) {
+            .top-bar {
+                width: min(1600px, calc(100vw - 40px));
+                margin-left: 50%;
+                transform: translateX(-50%);
+                justify-content: space-between;
+                flex-wrap: nowrap;
+                gap: clamp(0.35rem, 0.8vw, 0.75rem);
+            }
+
+            .top-bar > .site-label { flex: 0 1 auto; }
+            .top-bar > .download-pdf,
+            .top-bar > .top-bar-controls > .translate-widget,
+            .top-bar > .top-bar-controls > .theme-toggle { flex: 0 0 auto; }
+            .top-bar .download-pdf { padding-inline: 0.75rem; }
+            .top-bar .translate-widget { gap: 0.4rem; padding-inline: 0.55rem; }
+            .top-bar #google_translate_element { min-width: 150px; }
+            .top-bar #google_translate_element .goog-te-combo {
+                width: 150px !important;
+                min-width: 150px !important;
+            }
+            .top-bar .theme-toggle { padding-inline: 0.75rem; }
+        }
+
         .site-label {
             font-size: 0.9rem;
             font-weight: 700;
@@ -74,10 +108,15 @@
         }
 
         .top-bar-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex-wrap: wrap;
+            display: contents;
+        }
+
+        @media screen and (min-width: 900px) and (max-width: 1350px) {
+            .top-bar .translate-title { display: none; }
+        }
+
+        @media screen and (min-width: 900px) and (max-width: 1150px) {
+            .top-bar > .site-label { display: none; }
         }
 
         /* DOWNLOAD PDF BUTTON */
@@ -154,6 +193,7 @@
         .translate-widget {
             display: flex;
             align-items: center;
+            flex-wrap: nowrap;
             gap: 0.65rem;
             min-height: 58px;
             padding: 0.5rem 0.7rem 0.5rem 0.9rem;
@@ -536,19 +576,18 @@
             }
 
             .top-bar {
-                flex-direction: column;
-                align-items: flex-start;
+                flex-wrap: wrap;
+                align-items: center;
             }
 
             .top-bar-controls {
-                width: 100%;
-                align-items: stretch;
+                display: contents;
             }
 
             .translate-widget {
-                flex: 1 1 100%;
-                width: 100%;
-                flex-wrap: wrap;
+                flex: 1 1 auto;
+                width: auto;
+                min-width: 0;
             }
 
             #google_translate_element {
