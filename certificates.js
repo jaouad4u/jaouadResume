@@ -12,6 +12,22 @@
   };
   let sequence = 0, task = null, pdf = null, pageNumber = 1, busy = false;
   let pdfLibrary;
+  let activeCertificate = -1;
+  const browsableCertificates = [];
+  function updateCertificateNavigation() {
+    $('previous-certificate').disabled = activeCertificate <= 0;
+    $('next-certificate').disabled = activeCertificate < 0 || activeCertificate >= browsableCertificates.length - 1;
+    $('certificate-position').textContent = `Document ${activeCertificate + 1} of ${browsableCertificates.length}`;
+  }
+  function showCertificate(index) {
+    if (index < 0 || index >= browsableCertificates.length) return;
+    activeCertificate = index;
+    updateCertificateNavigation();
+    const entry = browsableCertificates[index];
+    openDocument(entry.item, entry.url, entry.extension);
+  }
+  $('previous-certificate').onclick = () => showCertificate(activeCertificate - 1);
+  $('next-certificate').onclick = () => showCertificate(activeCertificate + 1);
   // Pinned PDF.js module and matching worker; loaded only when a PDF is opened.
   async function getPdfLibrary() {
     if (!pdfLibrary) {
@@ -71,8 +87,10 @@
     cleanup(); const token = sequence;
     $('viewer-title').textContent = item.title;
     $('status').textContent = 'Loading document…';
-    $('viewer').showModal();
-    $('close').focus();
+    if (!$('viewer').open) {
+      $('viewer').showModal();
+      $('close').focus();
+    }
     try {
       if (extension === 'pdf') {
         const lib = await getPdfLibrary();
@@ -124,7 +142,9 @@
     const title = document.createElement('h2'); title.textContent = item.title;
     const button = document.createElement('button'); button.type = 'button'; button.className = 'view';
     button.textContent = 'View document'; button.setAttribute('aria-label', `View ${item.title}`);
-    button.onclick = () => openDocument(item, url, extension);
+    const certificateIndex = browsableCertificates.length;
+    browsableCertificates.push({ item, url, extension });
+    button.onclick = () => showCertificate(certificateIndex);
     card.append(type, title, button); $('grid').append(card); count++;
   }
   if (!count) {
