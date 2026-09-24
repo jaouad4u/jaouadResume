@@ -1,22 +1,17 @@
-// Paths match the published files in this repository. Add new entries here.
+// Display order requested by the site owner. Network+ entries share the existing certificate.
 window.CERTIFICATES = [
+  {
+    "title": "Cyber Security Master Diploma",
+    "category": "Diploma",
+    "soon": true
+  },
   {
     "title": "Cyber Security Bachelor Diploma",
     "file": "Cyber%20Security%20Bachelor%20Diploma.pdf",
     "category": "Diploma"
   },
   {
-    "title": "Applying Assessment & Authorization (A&A) in the National Industrial Security Program (NISP)",
-    "file": "Applying%20Assessment%20%26%20Authorization%20%28A%26A%29%20in%20the%20National%20Industrial%20Security%20Program%20%28NISP%29.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "AWS Certified Solutions Architect - Associate",
-    "file": "AWS%20Certified%20Solutions%20Architect%20-%20Associate.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "Certified Ethical Hacker-EC Council-Certificate",
+    "title": "Certified Ethical Hacker (CEH)",
     "file": "Certified%20Ethical%20Hacker-EC%20Council-Certificate.pdf",
     "category": "Certificate"
   },
@@ -26,38 +21,68 @@ window.CERTIFICATES = [
     "category": "Certificate"
   },
   {
-    "title": "CompTIA A+ ce certificate",
-    "file": "CompTIA%20A%2B%20ce%20certificate.pdf",
+    "title": "SecurityX CE",
+    "file": "CompTIA%20SecurityX%20ce%20certificate.pdf",
     "category": "Certificate"
   },
   {
-    "title": "CompTIA CySA+ ce certificate",
-    "file": "CompTIA%20CySA%2B%20ce%20certificate.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "CompTIA Data+ ce certificate",
-    "file": "CompTIA%20Data%2B%20ce%20certificate.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "CompTIA Network+ ce certificate",
-    "file": "CompTIA%20Network%2B%20ce%20certificate.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "CompTIA PenTest+ ce certificate",
+    "title": "PenTest+",
     "file": "CompTIA%20PenTest%2B%20ce%20certificate.pdf",
     "category": "Certificate"
   },
   {
-    "title": "CompTIA Security+ ce certificate",
+    "title": "ITIL-4",
+    "file": "ITIL-4.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "CySA+",
+    "file": "CompTIA%20CySA%2B%20ce%20certificate.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "Security+ CE",
     "file": "CompTIA%20Security%2B%20ce%20certificate.pdf",
     "category": "Certificate"
   },
   {
-    "title": "CompTIA SecurityX ce certificate",
-    "file": "CompTIA%20SecurityX%20ce%20certificate.pdf",
+    "title": "AWS Certified Solutions Architect – Associate",
+    "file": "AWS%20Certified%20Solutions%20Architect%20-%20Associate.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "Network+",
+    "file": "CompTIA%20Network%2B%20ce%20certificate.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "Data+ CE",
+    "file": "CompTIA%20Data%2B%20ce%20certificate.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "Network+ CE",
+    "file": "CompTIA%20Network%2B%20ce%20certificate.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "A+ CE",
+    "file": "CompTIA%20A%2B%20ce%20certificate.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "Linux LP1 Certificate",
+    "file": "Linux%20LP1-Certificate.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "ISO/IEC 27001 Lead Auditor",
+    "file": "ISO-IEC%2027001-Lead%20Auditor.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "Applying Assessment & Authorization (A&A) in the National Industrial Security Program (NISP)",
+    "file": "Applying%20Assessment%20%26%20Authorization%20%28A%26A%29%20in%20the%20National%20Industrial%20Security%20Program%20%28NISP%29.pdf",
     "category": "Certificate"
   },
   {
@@ -91,33 +116,13 @@ window.CERTIFICATES = [
     "category": "Certificate"
   },
   {
-    "title": "Introduction to DOD Zero Trust",
+    "title": "Introduction to DoD Zero Trust",
     "file": "Introduction%20to%20DOD%20Zero%20Trust.pdf",
     "category": "Certificate"
   },
   {
     "title": "Introduction to the NISP RMF A&A Process",
     "file": "Introduction%20to%20the%20NISP%20RMF%20A%26A%20Process.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "ISO-IEC 27001-Lead Auditor",
-    "file": "ISO-IEC%2027001-Lead%20Auditor.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "ITIL-4",
-    "file": "ITIL-4.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "Linux LP1-Certificate",
-    "file": "Linux%20LP1-Certificate.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "Microsoft Certified-Azure Administrator Associate",
-    "file": "Microsoft%20Certified-Azure%20Administrator%20Associate.jpg",
     "category": "Certificate"
   },
   {
@@ -141,23 +146,8 @@ window.CERTIFICATES = [
     "category": "Certificate"
   },
   {
-    "title": "Risk Management Framework (RMF) - Prepare Step",
-    "file": "Risk%20Management%20Framework%20%28RMF%29%20-%20Prepare%20Step.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "Risk Management Framework (RMF) Assess Step",
-    "file": "Risk%20Management%20Framework%20%28RMF%29%20Assess%20Step.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "Risk Management Framework (RMF) Authorize Step",
-    "file": "Risk%20Management%20Framework%20%28RMF%29%20Authorize%20Step.pdf",
-    "category": "Certificate"
-  },
-  {
-    "title": "Risk Management Framework (RMF) Categorize Step",
-    "file": "Risk%20Management%20Framework%20%28RMF%29%20Categorize%20Step.pdf",
+    "title": "Risk Management Framework",
+    "file": "Risk%20Management%20Framework.pdf",
     "category": "Certificate"
   },
   {
@@ -166,23 +156,38 @@ window.CERTIFICATES = [
     "category": "Certificate"
   },
   {
-    "title": "Risk Management Framework (RMF) Implement Step",
-    "file": "Risk%20Management%20Framework%20%28RMF%29%20Implement%20Step.pdf",
+    "title": "RMF – Prepare Step",
+    "file": "Risk%20Management%20Framework%20%28RMF%29%20-%20Prepare%20Step.pdf",
     "category": "Certificate"
   },
   {
-    "title": "Risk Management Framework (RMF) Monitor Step",
-    "file": "Risk%20Management%20Framework%20%28RMF%29%20Monitor%20Step.pdf",
+    "title": "RMF – Categorize Step",
+    "file": "Risk%20Management%20Framework%20%28RMF%29%20Categorize%20Step.pdf",
     "category": "Certificate"
   },
   {
-    "title": "Risk Management Framework (RMF) Select Step",
+    "title": "RMF – Select Step",
     "file": "Risk%20Management%20Framework%20%28RMF%29%20Select%20Step.pdf",
     "category": "Certificate"
   },
   {
-    "title": "Risk Management Framework",
-    "file": "Risk%20Management%20Framework.pdf",
+    "title": "RMF – Implement Step",
+    "file": "Risk%20Management%20Framework%20%28RMF%29%20Implement%20Step.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "RMF – Assess Step",
+    "file": "Risk%20Management%20Framework%20%28RMF%29%20Assess%20Step.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "RMF – Authorize Step",
+    "file": "Risk%20Management%20Framework%20%28RMF%29%20Authorize%20Step.pdf",
+    "category": "Certificate"
+  },
+  {
+    "title": "RMF – Monitor Step",
+    "file": "Risk%20Management%20Framework%20%28RMF%29%20Monitor%20Step.pdf",
     "category": "Certificate"
   },
   {
