@@ -47,12 +47,12 @@
         }
 
         .container {
-            max-width: 1150px;
+            max-width: 1440px;
             margin: 2rem auto;
             padding: 0 1.5rem;
             display: grid;
-            grid-template-columns: 310px 1fr;
-            gap: 1.75rem;
+            grid-template-columns: 300px minmax(0, 1fr);
+            gap: 1.5rem;
         }
 
         .top-bar {
@@ -79,26 +79,34 @@
 
         @media screen and (min-width: 1200px) {
             .top-bar {
-                width: calc(100vw - 100px);
-                max-width: none;
-                margin-left: 50%;
-                transform: translateX(-50%);
                 display: grid;
-                grid-template-columns: 28% minmax(0, 1fr);
-                justify-content: initial;
-                flex-wrap: initial;
-                gap: 0;
+                grid-template-columns: 300px minmax(0, 1fr);
+                width: 100%;
+                max-width: none;
+                margin-left: 0;
+                transform: none;
+                align-items: center;
+                gap: 1.5rem;
             }
 
-            .top-bar-controls { gap: 0.55rem; flex-wrap: nowrap; }
-            .top-bar .download-pdf { min-height: 68px; padding: 0.85rem 1.2rem; font-size: 1.08rem; }
-            .top-bar .translate-widget { min-height: 68px; gap: 0.4rem; padding: 0.55rem 0.65rem; }
-            .top-bar #google_translate_element { min-width: 150px; }
-            .top-bar #google_translate_element .goog-te-combo {
-                width: 150px !important;
-                min-width: 150px !important;
-            }
-            .top-bar .theme-toggle { min-height: 68px; padding: 0.75rem 1rem; font-size: 1.02rem; }
+            .top-bar-controls { justify-content: flex-end; gap: 0.55rem; flex-wrap: nowrap; }
+            .top-bar .download-pdf { min-height: 64px; padding: 0.75rem 1rem; font-size: 1rem; }
+            .top-bar .translate-widget { min-height: 64px; gap: 0.4rem; padding: 0.5rem 0.6rem; }
+            .top-bar #google_translate_element { min-width: 140px; }
+            .top-bar #google_translate_element .goog-te-combo { width: 140px !important; min-width: 140px !important; }
+            .top-bar .theme-toggle { min-height: 64px; padding: 0.7rem 0.9rem; font-size: 0.98rem; }
+        }
+
+        @media screen and (min-width: 1200px) and (max-width: 1350px) {
+            .top-bar { grid-template-columns: 240px minmax(0, 1fr); gap: 1rem; }
+            .top-bar-controls { gap: 0.35rem; }
+            .top-bar .translate-title { display: none; }
+            .top-bar .download-pdf { min-height: 56px; padding: 0.55rem 0.65rem; font-size: 0.88rem; }
+            .top-bar .translate-widget { min-height: 56px; padding: 0.4rem; }
+            .top-bar #google_translate_element,
+            .top-bar #google_translate_element .goog-te-combo { min-width: 105px !important; width: 105px !important; }
+            .top-bar .translate-reset { min-width: 38px; min-height: 42px; }
+            .top-bar .theme-toggle { min-height: 56px; padding: 0.5rem 0.6rem; font-size: 0.88rem; }
         }
 
         .site-label {
